@@ -10,8 +10,8 @@ Application pour gérer et simuler la distribution d'électricité.
 - `Main.java` : classe principale
 
 ## Collaborateurs
-- Aminata
-- [Nom de ton amie]
+- Aminata Diallo
+- Elodie Cao
 
 ## Commandes Git utiles
 - `git clone <url>` : cloner le projet
