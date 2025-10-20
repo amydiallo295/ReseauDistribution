@@ -1,0 +1,13 @@
+public class Maison {
+    private String nom;
+    private TypeMaison type;
+
+    public Maison(String nom, TypeMaison type){
+        this.nom = nom;
+        this.type = type;
+    }
+
+    public int getDemande(){
+        return type.demande;
+    }
+}
