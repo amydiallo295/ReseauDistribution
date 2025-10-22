@@ -10,4 +10,8 @@ public class Maison {
     public int getDemande(){
         return type.demande;
     }
+
+    public String getNom(){
+        return nom;
+    }
 }
