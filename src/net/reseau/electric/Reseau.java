@@ -46,32 +46,12 @@ public class Reseau{
             }
         }
 
-    // Vérification de la surcharge
+   // Vérifier si la connexion provoque une surcharge
     if (chargeActuelle + maison.getDemande() > generateur.getCapacite()) {
-        // Chercher un autre générateur avec capacité disponible
-        Generateur meilleurGen = null;
-        int capaciteRestanteMax = -1;
-        for (Generateur g : generateurs.values()) {
-            int chargeG = 0;
-            for (Map.Entry<String, String> entry : connections.entrySet()) {
-                if (entry.getValue().equals(g.getNom())) {
-                    chargeG += maisons.get(entry.getKey()).getDemande();
-                }
-            }
-            int capaciteRestante = g.getCapacite() - chargeG;
-            if (capaciteRestante >= maison.getDemande() && capaciteRestante > capaciteRestanteMax) {
-                meilleurGen = g;
-                capaciteRestanteMax = capaciteRestante;
-            }
-        }
-
-        if (meilleurGen != null) {
-            System.out.println("La maison " + nomMaison + " est connectée au générateur " + meilleurGen.getNom() + " pour éviter la surcharge de " + nomGenerateur);
-            connections.put(nomMaison, meilleurGen.getNom());
-            return;
-        } else {
-            System.out.println("Attention : aucun générateur ne peut accueillir " + nomMaison + " sans surcharge. Connexion quand même au générateur demandé.");
-        }
+        System.out.println("Attention : connecter " + nomMaison + " à " + nomGenerateur +
+                           " risque de dépasser sa capacité (" + 
+                           (chargeActuelle + maison.getDemande()) + "/" + 
+                           generateur.getCapacite() + " kW).");
     }
         //ajout de la connection
         connections.put(nomMaison, nomGenerateur);
