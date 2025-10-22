@@ -33,4 +33,25 @@ public class Reseau{
     /* Méthode permettant de supprimer une connection */
         connections.remove(nomMaison);
     }
+
+    public void Afiichage(){
+    /* Méthode permettant d'afficher le réseau actuel */
+        System.out.println("\n--- Réseau actuel ---");
+        System.out.println("Générateurs : ");
+        for(Generateur g : generateurs.values()){
+            System.out.println(" " + g.getNom() + " (" + g.getCapacite() + " kW)");
+        }
+
+        System.out.println("Maisons : ");
+        for(Maison m : maisons.values()){
+            System.out.println(" " + m.getNom() + " (" + m.getDemande() + " kW");
+        }
+
+        System.out.println("Connections : ");
+        for(Map.Entry<String, String> entree : connections.entrySet()){
+            System.out.println(" " + entree.getKey() + " -> " + entree.getValue());
+        }
+
+        System.out.println("----------------------\n");
+    }
 }
