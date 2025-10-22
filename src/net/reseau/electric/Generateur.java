@@ -10,4 +10,8 @@ public class Generateur {
     public int getCapacite(){
         return capacite;
     }
+
+    public String getNom(){
+        return nom;
+    }
 }
