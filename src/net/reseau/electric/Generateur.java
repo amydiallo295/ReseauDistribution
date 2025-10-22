@@ -11,8 +11,9 @@ public class Generateur {
         return capacite;
 
     }
+
     public String getNom(){
         return nom;
     }
-    
 }
+    
