@@ -117,12 +117,15 @@ public class Reseau {
         double utilisationMoyenne = sommeUtilisation / generateurs.size();
         // Dispersion
         double disp = 0.0;
-        for (double u : utilisation.values()) disp += Math.abs(u - utilisationMoyenne);
+        for (double u : utilisation.values()){
+            disp += Math.abs(u - utilisationMoyenne);
+        }
         // Surcharge
         double surcharge = 0.0;
         for (String g : generateurs.keySet()) {
             int depassement = charge.get(g) - generateurs.get(g).getCapacite();
-            if (depassement > 0) surcharge += (double) depassement / generateurs.get(g).getCapacite();
+            if (depassement > 0)
+                surcharge += (double) depassement / generateurs.get(g).getCapacite();
         }
         double cout = disp + lambda * surcharge;
         System.out.printf("Dispersion (Disp) : %.3f\n", disp);
