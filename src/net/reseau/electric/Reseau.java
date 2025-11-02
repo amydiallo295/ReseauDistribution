@@ -103,8 +103,8 @@ public class Reseau {
         for (String g : generateurs.keySet()) charge.put(g, 0);
         for (Map.Entry<String, String> entry : connections.entrySet()) {
             String maison = entry.getKey();
-            String gen = entry.getValue();
-            charge.put(gen, charge.get(gen) + maisons.get(maison).getDemande());
+            String generateur = entry.getValue();
+            charge.put(generateur, charge.get(generateur) + maisons.get(maison).getDemande());
         }
         // Calcul des taux d'utilisation
         Map<String, Double> utilisation = new HashMap<>();
