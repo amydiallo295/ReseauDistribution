@@ -1,25 +1,28 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Reseau{
+public class Reseau {
     private Map<String, Generateur> generateurs = new HashMap<>();
     private Map<String, Maison> maisons = new HashMap<>();
-    private Map<String, String> connections = new HashMap<>();
+    private Map<String, String> connexions = new HashMap<>(); // maison -> générateur
 
-    public void ajouterGenerateur(String nomGenerateur, int capacite){
-    /* Méthode permettant d'ajouter des générateurs dans la liste des générateurs */
-        if(generateurs.containsKey(nomGenerateur)){
-            System.out.println("MAJ : Générateur " + nomGenerateur + " mise à jour");
+    public void ajouterGenerateur(String nom, int capacite) {
+        if (generateurs.containsKey(nom)) {
+            System.out.println("MAJ: Capacité du générateur " + nom + " mise à jour.");
         }
-        generateurs.put(nomGenerateur, new Generateur(nomGenerateur, capacite));
+        generateurs.put(nom, new Generateur(nom, capacite));
     }
 
-    public void ajouterMaison(String nomMaison, TypeMaison type){
-    /* Méthode permettant d'ajouter des maisons dans la liste des maisons  */
-        if(maisons.containsKey(nomMaison)){
-            System.out.println("MAJ : Maison " + nomMaison + " mise à jour");
+    public void ajouterMaison(String nom, String typeStr) {
+        try {
+            TypeMaison type = TypeMaison.valueOf(typeStr.toUpperCase());
+            if (maisons.containsKey(nom)) {
+                System.out.println("MAJ: Consommation de la maison " + nom + " mise à jour.");
+            }
+            maisons.put(nom, new Maison(nom, type));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Type inconnu. Utilisez BASSE, NORMALE ou FORTE.");
         }
-        maisons.put(nomMaison, new Maison(nomMaison, type));
     }
 
     public void ajouterConnections(String nomMaison, String nomGenerateur){
@@ -40,7 +43,7 @@ public class Reseau{
         un somme de leurs demandes a fin de connaitre la charge actuelle*/
 
         int chargeActuelle = 0;
-         for (Map.Entry<String, String> entry : connections.entrySet()) {
+         for (Map.Entry<String, String> entry : connexions.entrySet()) {
             if (entry.getValue().equals(nomGenerateur)) {
                 chargeActuelle += maisons.get(entry.getKey()).getDemande();
             }
@@ -54,33 +57,84 @@ public class Reseau{
                            generateur.getCapacite() + " kW).");
     }
         //ajout de la connection
-        connections.put(nomMaison, nomGenerateur);
-       
+        connexions.put(nomMaison, nomGenerateur);
+
+    }
+    
+    public void ajouterConnexion(String nomMaison, String nomGenerateur) {
+        if (!maisons.containsKey(nomMaison) || !generateurs.containsKey(nomGenerateur)) {
+            System.out.println("Erreur: Maison ou générateur inconnu.");
+            return;
+        }
+        connexions.put(nomMaison, nomGenerateur);
     }
 
-    public void enleverConnection(String nomMaison){
-    /* Méthode permettant de supprimer une connection */
-        connections.remove(nomMaison);
+    public void enleverConnexion(String nomMaison) {
+        connexions.remove(nomMaison);
     }
 
-    public void Afiichage(){
-    /* Méthode permettant d'afficher le réseau actuel */
+    public boolean connexionExiste(String nomMaison) {
+        return connexions.containsKey(nomMaison);
+    }
+
+    public void afficher() {
         System.out.println("\n--- Réseau actuel ---");
-        System.out.println("Générateurs : ");
-        for(Generateur g : generateurs.values()){
-            System.out.println(" " + g.getNom() + " (" + g.getCapacite() + " kW)");
+        System.out.println("Générateurs :");
+        for (Generateur g : generateurs.values()) {
+            System.out.println("  " + g.getNom() + " (" + g.getCapacite() + " kW)");
         }
-
-        System.out.println("Maisons : ");
-        for(Maison m : maisons.values()){
-            System.out.println(" " + m.getNom() + " (" + m.getDemande() + " kW");
+        System.out.println("Maisons :");
+        for (Maison m : maisons.values()) {
+            System.out.println("  " + m.getNom() + " (" + m.getType() + ", " + m.getDemande() + " kW)");
         }
-
-        System.out.println("Connections : ");
-        for(Map.Entry<String, String> entree : connections.entrySet()){
-            System.out.println(" " + entree.getKey() + " -> " + entree.getValue());
+        System.out.println("Connexions :");
+        for (Map.Entry<String, String> entry : connexions.entrySet()) {
+            System.out.println("  " + entry.getKey() + " -> " + entry.getValue());
         }
+        System.out.println("---------------------\n");
+    }
 
-        System.out.println("----------------------\n");
+    public boolean verifierConnexions() {
+        boolean ok = true;
+        for (String m : maisons.keySet()) {
+            if (!connexions.containsKey(m)) {
+                System.out.println("Maison sans connexion : " + m);
+                ok = false;
+            }
+        }
+        return ok;
+    }
+
+    public void calculerCout() {
+        final int lambda = 10;
+        Map<String, Integer> charge = new HashMap<>();
+        for (String g : generateurs.keySet()) charge.put(g, 0);
+        for (Map.Entry<String, String> entry : connexions.entrySet()) {
+            String maison = entry.getKey();
+            String gen = entry.getValue();
+            charge.put(gen, charge.get(gen) + maisons.get(maison).getDemande());
+        }
+        // Calcul des taux d'utilisation
+        Map<String, Double> utilisation = new HashMap<>();
+        double sommeUtilisation = 0.0;
+        for (String g : generateurs.keySet()) {
+            double u = (double) charge.get(g) / generateurs.get(g).getCapacite();
+            utilisation.put(g, u);
+            sommeUtilisation += u;
+        }
+        double utilisationMoyenne = sommeUtilisation / generateurs.size();
+        // Dispersion
+        double disp = 0.0;
+        for (double u : utilisation.values()) disp += Math.abs(u - utilisationMoyenne);
+        // Surcharge
+        double surcharge = 0.0;
+        for (String g : generateurs.keySet()) {
+            int depassement = charge.get(g) - generateurs.get(g).getCapacite();
+            if (depassement > 0) surcharge += (double) depassement / generateurs.get(g).getCapacite();
+        }
+        double cout = disp + lambda * surcharge;
+        System.out.printf("Dispersion (Disp) : %.3f\n", disp);
+        System.out.printf("Surcharge : %.3f\n", surcharge);
+        System.out.printf("Coût total : %.3f\n", cout);
     }
 }

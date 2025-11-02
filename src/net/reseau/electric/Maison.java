@@ -13,4 +13,8 @@ public class Maison {
     public String getNom(){
         return nom;
     }
+
+    public TypeMaison getType(){
+        return type;
+    }
 }
