@@ -4,7 +4,7 @@ import java.util.Map;
 public class Reseau {
     private Map<String, Generateur> generateurs = new HashMap<>();
     private Map<String, Maison> maisons = new HashMap<>();
-    private Map<String, String> connexions = new HashMap<>(); // maison -> générateur
+    private Map<String, String> connections = new HashMap<>(); // maison -> générateur
 
     public void ajouterGenerateur(String nom, int capacite) {
         if (generateurs.containsKey(nom)) {
@@ -25,7 +25,7 @@ public class Reseau {
         }
     }
 
-    public void ajouterConnexion(String nomMaison, String nomGenerateur){
+    public void ajouterConnection(String nomMaison, String nomGenerateur){
     /* Méthode permettant d'ajouter des connections dans la liste des connections */
     //Verification de la maison
         if(! maisons.containsKey(nomMaison) ){ 
@@ -43,7 +43,7 @@ public class Reseau {
         un somme de leurs demandes a fin de connaitre la charge actuelle*/
 
         int chargeActuelle = 0;
-         for (Map.Entry<String, String> entry : connexions.entrySet()) {
+         for (Map.Entry<String, String> entry : connections.entrySet()) {
             if (entry.getValue().equals(nomGenerateur)) {
                 chargeActuelle += maisons.get(entry.getKey()).getDemande();
             }
@@ -57,16 +57,16 @@ public class Reseau {
                            generateur.getCapacite() + " kW).");
     }
         //ajout de la connection
-        connexions.put(nomMaison, nomGenerateur);
+        connections.put(nomMaison, nomGenerateur);
 
     }
 
-    public void enleverConnexion(String nomMaison) {
-        connexions.remove(nomMaison);
+    public void enleverConnection(String nomMaison) {
+        connections.remove(nomMaison);
     }
 
-    public boolean connexionExiste(String nomMaison) {
-        return connexions.containsKey(nomMaison);
+    public boolean connectionExiste(String nomMaison) {
+        return connections.containsKey(nomMaison);
     }
 
     public void afficher() {
@@ -80,16 +80,16 @@ public class Reseau {
             System.out.println("  " + m.getNom() + " (" + m.getType() + ", " + m.getDemande() + " kW)");
         }
         System.out.println("Connexions :");
-        for (Map.Entry<String, String> entry : connexions.entrySet()) {
+        for (Map.Entry<String, String> entry : connections.entrySet()) {
             System.out.println("  " + entry.getKey() + " -> " + entry.getValue());
         }
         System.out.println("---------------------\n");
     }
 
-    public boolean verifierConnexions() {
+    public boolean verifierConnection() {
         boolean ok = true;
         for (String m : maisons.keySet()) {
-            if (!connexions.containsKey(m)) {
+            if (!connections.containsKey(m)) {
                 System.out.println("Maison sans connexion : " + m);
                 ok = false;
             }
@@ -101,7 +101,7 @@ public class Reseau {
         final int lambda = 10;
         Map<String, Integer> charge = new HashMap<>();
         for (String g : generateurs.keySet()) charge.put(g, 0);
-        for (Map.Entry<String, String> entry : connexions.entrySet()) {
+        for (Map.Entry<String, String> entry : connections.entrySet()) {
             String maison = entry.getKey();
             String gen = entry.getValue();
             charge.put(gen, charge.get(gen) + maisons.get(maison).getDemande());
