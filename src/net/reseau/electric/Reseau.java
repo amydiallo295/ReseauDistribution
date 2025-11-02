@@ -56,9 +56,8 @@ public class Reseau {
                            (chargeActuelle + maison.getDemande()) + "/" + 
                            generateur.getCapacite() + " kW).");
     }
-        //ajout de la connection
-        connections.put(nomMaison, nomGenerateur);
-
+    //ajout de la connection
+    connections.put(nomMaison, nomGenerateur);
     }
 
     public void enleverConnection(String nomMaison) {
