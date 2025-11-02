@@ -25,7 +25,7 @@ public class Reseau {
         }
     }
 
-    public void ajouterConnections(String nomMaison, String nomGenerateur){
+    public void ajouterConnexion(String nomMaison, String nomGenerateur){
     /* Méthode permettant d'ajouter des connections dans la liste des connections */
     //Verification de la maison
         if(! maisons.containsKey(nomMaison) ){ 
@@ -59,14 +59,6 @@ public class Reseau {
         //ajout de la connection
         connexions.put(nomMaison, nomGenerateur);
 
-    }
-    
-    public void ajouterConnexion(String nomMaison, String nomGenerateur) {
-        if (!maisons.containsKey(nomMaison) || !generateurs.containsKey(nomGenerateur)) {
-            System.out.println("Erreur: Maison ou générateur inconnu.");
-            return;
-        }
-        connexions.put(nomMaison, nomGenerateur);
     }
 
     public void enleverConnexion(String nomMaison) {
