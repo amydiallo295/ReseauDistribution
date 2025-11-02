@@ -4,7 +4,7 @@ import java.util.Map;
 public class Reseau {
     private Map<String, Generateur> generateurs = new HashMap<>();
     private Map<String, Maison> maisons = new HashMap<>();
-    private Map<String, String> connections = new HashMap<>(); // maison -> générateur
+    private Map<String, String> connexions = new HashMap<>(); // maison -> générateur
 
     public void ajouterGenerateur(String nom, int capacite) {
         if (generateurs.containsKey(nom)) {
@@ -26,46 +26,58 @@ public class Reseau {
     }
 
     public void ajouterConnection(String nomMaison, String nomGenerateur){
-    /* Méthode permettant d'ajouter des connections dans la liste des connections */
-    //Verification de la maison
-        if(! maisons.containsKey(nomMaison) ){ 
-             throw new IllegalArgumentException("Erreur de type ! Veuillez choisir entre : BASSE, NORMAL, HAUTE");
+        /* Méthode permettant d'ajouter des connexions dans la liste des connexions */
+        
+        // Vérification de l'existence de la maison
+        if (!maisons.containsKey(nomMaison)) { 
+            System.out.println("Erreur : La maison " + nomMaison + " n'existe pas dans le réseau.");
+            return;
         }
         Maison maison = maisons.get(nomMaison);
 
-    //Verification si un generateur generateur précis est indiqué
-        if(! generateurs.containsKey(nomGenerateur) ){ 
-             throw new IllegalArgumentException("Erreur : Le générateur " + nomGenerateur + " n'existe pas dans le réseau.");
+        // Vérification de l'existence du générateur
+        if (!generateurs.containsKey(nomGenerateur)) { 
+            System.out.println("Erreur : Le générateur " + nomGenerateur + " n'existe pas dans le réseau.");
+            return;
         }
         Generateur generateur = generateurs.get(nomGenerateur);
 
-        /*calcul de la charge actuelle du générateur en parcourant toutes les maisons déja connecter a ce generateur et en affectuant 
-        un somme de leurs demandes a fin de connaitre la charge actuelle*/
+        // Vérifier si la maison est déjà connectée (unicité de la connexion)
+        if (connexions.containsKey(nomMaison)) {
+            String ancienGenerateur = connexions.get(nomMaison);
+            System.out.println("Info : La maison " + nomMaison + " était connectée à " + ancienGenerateur + 
+                             ". Nouvelle connexion vers " + nomGenerateur + ".");
+        }
 
+        // Calcul de la charge actuelle du générateur
         int chargeActuelle = 0;
-         for (Map.Entry<String, String> entry : connections.entrySet()) {
-            if (entry.getValue().equals(nomGenerateur)) {
+        for (Map.Entry<String, String> entry : connexions.entrySet()) {
+            // Ne pas compter la maison si elle est déjà connectée à ce générateur
+            if (entry.getValue().equals(nomGenerateur) && !entry.getKey().equals(nomMaison)) {
                 chargeActuelle += maisons.get(entry.getKey()).getDemande();
             }
         }
 
-   // Vérifier si la connexion provoque une surcharge
-    if (chargeActuelle + maison.getDemande() > generateur.getCapacite()) {
-        System.out.println("Attention : connecter " + nomMaison + " à " + nomGenerateur +
-                           " risque de dépasser sa capacité (" + 
-                           (chargeActuelle + maison.getDemande()) + "/" + 
-                           generateur.getCapacite() + " kW).");
-    }
-    //ajout de la connection
-    connections.put(nomMaison, nomGenerateur);
+        // Vérifier si la connexion provoque une surcharge
+        int nouvelleCharge = chargeActuelle + maison.getDemande();
+        if (nouvelleCharge > generateur.getCapacite()) {
+            System.out.println("Erreur : connecter " + nomMaison + " à " + nomGenerateur +
+                             " provoquerait une surcharge (" + nouvelleCharge + "/" + 
+                             generateur.getCapacite() + " kW). Connexion refusée.");
+            return; // Empêche la connexion
+        }
+        
+        // Ajout de la connexion (seulement si pas de surcharge)
+        connexions.put(nomMaison, nomGenerateur);
+        System.out.println("Connexion ajoutée : " + nomMaison + " -> " + nomGenerateur);
     }
 
     public void enleverConnection(String nomMaison) {
-        connections.remove(nomMaison);
+        connexions.remove(nomMaison);
     }
 
     public boolean connectionExiste(String nomMaison) {
-        return connections.containsKey(nomMaison);
+        return connexions.containsKey(nomMaison);
     }
 
     public void afficher() {
@@ -79,7 +91,7 @@ public class Reseau {
             System.out.println("  " + m.getNom() + " (" + m.getType() + ", " + m.getDemande() + " kW)");
         }
         System.out.println("Connexions :");
-        for (Map.Entry<String, String> entry : connections.entrySet()) {
+        for (Map.Entry<String, String> entry : connexions.entrySet()) {
             System.out.println("  " + entry.getKey() + " -> " + entry.getValue());
         }
         System.out.println("---------------------\n");
@@ -88,7 +100,7 @@ public class Reseau {
     public boolean verifierConnection() {
         boolean ok = true;
         for (String m : maisons.keySet()) {
-            if (!connections.containsKey(m)) {
+            if (!connexions.containsKey(m)) {
                 System.out.println("Maison sans connexion : " + m);
                 ok = false;
             }
@@ -96,11 +108,86 @@ public class Reseau {
         return ok;
     }
 
+    /**
+     * Valide toutes les restrictions du réseau électrique
+     */
+    public boolean validerReseau() {
+        boolean valide = true;
+        
+        // Restriction 1: Le réseau contient toujours au moins une maison et un générateur
+        if (maisons.isEmpty()) {
+            System.out.println("ERREUR: Le réseau doit contenir au moins une maison.");
+            valide = false;
+        }
+        
+        if (generateurs.isEmpty()) {
+            System.out.println("ERREUR: Le réseau doit contenir au moins un générateur.");
+            valide = false;
+        }
+        
+        // Si pas de maisons ou générateurs, pas besoin de continuer
+        if (!valide) return false;
+        
+        // Restriction 2: Chaque maison doit être connectée à exactement un générateur
+        for (String nomMaison : maisons.keySet()) {
+            if (!connexions.containsKey(nomMaison)) {
+                System.out.println("ERREUR: La maison " + nomMaison + " n'est connectée à aucun générateur.");
+                valide = false;
+            }
+        }
+        
+        // Vérifier qu'il n'y a pas de connexions vers des générateurs inexistants
+        for (Map.Entry<String, String> entry : connexions.entrySet()) {
+            if (!generateurs.containsKey(entry.getValue())) {
+                System.out.println("ERREUR: Connexion vers un générateur inexistant: " + entry.getValue());
+                valide = false;
+            }
+            if (!maisons.containsKey(entry.getKey())) {
+                System.out.println("ERREUR: Connexion depuis une maison inexistante: " + entry.getKey());
+                valide = false;
+            }
+        }
+        
+        // Restriction 3: Somme des demandes ≤ Somme des capacités maximales
+        int sommeDemandes = 0;
+        for (Maison maison : maisons.values()) {
+            sommeDemandes += maison.getDemande();
+        }
+        
+        int sommeCapacites = 0;
+        for (Generateur generateur : generateurs.values()) {
+            sommeCapacites += generateur.getCapacite();
+        }
+        
+        if (sommeDemandes > sommeCapacites) {
+            System.out.println("ERREUR: La somme des demandes (" + sommeDemandes + 
+                             " kW) dépasse la somme des capacités disponibles (" + 
+                             sommeCapacites + " kW).");
+            System.out.println("Il est impossible de satisfaire toutes les demandes avec cette configuration.");
+            valide = false;
+        }
+        
+        if (valide) {
+            System.out.println("✓ Toutes les restrictions du réseau sont respectées.");
+            System.out.println("  - Demande totale: " + sommeDemandes + " kW");
+            System.out.println("  - Capacité totale: " + sommeCapacites + " kW");
+        }
+        
+        return valide;
+    }
+
     public void calculerCout() {
+        // Vérifier d'abord que le réseau respecte toutes les restrictions
+        if (!validerReseau()) {
+            System.out.println("\n❌ Impossible de calculer le coût : le réseau ne respecte pas toutes les restrictions.");
+            return;
+        }
+        
+        System.out.println("\n📊 Calcul du coût du réseau...");
         final int lambda = 10;
         Map<String, Integer> charge = new HashMap<>();
         for (String g : generateurs.keySet()) charge.put(g, 0);
-        for (Map.Entry<String, String> entry : connections.entrySet()) {
+        for (Map.Entry<String, String> entry : connexions.entrySet()) {
             String maison = entry.getKey();
             String generateur = entry.getValue();
             charge.put(generateur, charge.get(generateur) + maisons.get(maison).getDemande());
