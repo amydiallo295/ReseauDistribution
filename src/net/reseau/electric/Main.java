@@ -11,7 +11,8 @@ public class Main {
             System.out.println("1) Ajouter un générateur");
             System.out.println("2) Ajouter une maison");
             System.out.println("3) Ajouter une connexion");
-            System.out.println("4) Fin");
+            System.out.println("4) Valider le réseau");
+            System.out.println("5) Fin");
             System.out.print("Votre choix : ");
             String choix = scanner.nextLine();
 
@@ -36,8 +37,12 @@ public class Main {
                     reseau.ajouterConnection(h, g);
                 }
             } else if (choix.equals("4")) {
-                if (reseau.verifierConnection()) break;
-                else System.out.println("Corrigez les connexions avant de continuer.");
+                if (reseau.validerReseau()) {
+                    System.out.println("Réseau valide ! Passage au menu de gestion...");
+                    break;
+                } else {
+                    System.out.println("Corrigez les erreurs du réseau avant de continuer.");
+                }
             }
         }
 
