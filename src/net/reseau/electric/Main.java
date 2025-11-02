@@ -33,10 +33,10 @@ public class Main {
                 if (parts.length == 2) {
                     String h = parts[0].startsWith("M") ? parts[0] : parts[1];
                     String g = parts[0].startsWith("G") ? parts[0] : parts[1];
-                    reseau.ajouterConnexion(h, g);
+                    reseau.ajouterConnection(h, g);
                 }
             } else if (choix.equals("4")) {
-                if (reseau.verifierConnexions()) break;
+                if (reseau.verifierConnection()) break;
                 else System.out.println("Corrigez les connexions avant de continuer.");
             }
         }
@@ -58,17 +58,17 @@ public class Main {
                 String[] oldConn = scanner.nextLine().split(" ");
                 if (oldConn.length == 2) {
                     String h = oldConn[0].startsWith("M") ? oldConn[0] : oldConn[1];
-                    if (!reseau.connexionExiste(h)) {
+                    if (!reseau.connectionExiste(h)) {
                         System.out.println("Erreur : cette connexion n'existe pas.");
                         continue;
                     }
-                    reseau.enleverConnexion(h);
+                    reseau.enleverConnection(h);
                     System.out.print("Nouvelle connexion (ex: M1 G2) : ");
                     String[] newConn = scanner.nextLine().split(" ");
                     if (newConn.length == 2) {
                         String newH = newConn[0].startsWith("M") ? newConn[0] : newConn[1];
                         String newG = newConn[0].startsWith("G") ? newConn[0] : newConn[1];
-                        reseau.ajouterConnexion(newH, newG);
+                        reseau.ajouterConnection(newH, newG);
                     }
                 }
             } else if (choix.equals("3")) {
