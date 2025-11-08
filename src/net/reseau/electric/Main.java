@@ -11,9 +11,8 @@ public class Main {
             System.out.println("1) Ajouter un générateur");
             System.out.println("2) Ajouter une maison");
             System.out.println("3) Ajouter une connexion");
-            System.out.println("4)Supprimer une connexion");
-            System.out.println("5) Valider le réseau");
-            System.out.println("6) Fin");
+            System.out.println("4) Supprimer une connexion");
+            System.out.println("5) Fin");
             System.out.print("Votre choix : ");
             String choix = scanner.nextLine();
 
