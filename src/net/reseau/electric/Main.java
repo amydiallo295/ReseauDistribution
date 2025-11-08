@@ -24,7 +24,8 @@ public class Main {
                     reseau.ajouterGenerateur(parts[0], Integer.parseInt(parts[1]));
                 }
             } else if (choix.equals("2")) {
-                System.out.print("Nom et type de la maison (ex: M1 NORMAL) : ");
+                System.out.print("Nom et type de la maison (ex: M1 NORMALE) : ");
+                System.out.print("Types de maisons existantes : BASSE, NORMALE, FORTE ");
                 String[] parts = scanner.nextLine().split(" ");
                 if (parts.length == 2) {
                     reseau.ajouterMaison(parts[0], parts[1]);
