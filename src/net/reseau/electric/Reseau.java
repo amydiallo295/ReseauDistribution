@@ -72,6 +72,32 @@ public class Reseau {
         System.out.println("Connexion ajoutée : " + nomMaison + " -> " + nomGenerateur);
     }
 
+    public void supprimerConnexion(String nomMaison, String nomGenerateur) {
+        // Méthode permettant de supprimer une connexion entre une maison et un générateur
+    // Vérifier que la maison existe
+    if (!maisons.containsKey(nomMaison)) {
+        System.out.println("Erreur : la maison " + nomMaison + " n'existe pas dans le réseau.");
+        return;
+    }
+
+    // Vérifier que le générateur existe
+    if (!generateurs.containsKey(nomGenerateur)) {
+        System.out.println("Erreur : le générateur " + nomGenerateur + " n'existe pas dans le réseau.");
+        return;
+    }
+
+    // Vérifier que la connexion existe entre cette maison et ce générateur
+    if (!connexions.containsKey(nomMaison) || !connexions.get(nomMaison).equals(nomGenerateur)) {
+        System.out.println("Erreur : la connexion entre " + nomMaison + " et " + nomGenerateur + " n'existe pas.");
+        return;
+    }
+
+    // Supprimer la connexion
+    connexions.remove(nomMaison);
+    System.out.println("Connexion supprimée : " + nomMaison + " -/-> " + nomGenerateur);
+}
+
+
     public void enleverConnection(String nomMaison) {
         connexions.remove(nomMaison);
     }
@@ -79,6 +105,7 @@ public class Reseau {
     public boolean connectionExiste(String nomMaison) {
         return connexions.containsKey(nomMaison);
     }
+
 
     public void afficher() {
         System.out.println("\n--- Réseau actuel ---");

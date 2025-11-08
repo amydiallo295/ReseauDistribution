@@ -11,8 +11,9 @@ public class Main {
             System.out.println("1) Ajouter un générateur");
             System.out.println("2) Ajouter une maison");
             System.out.println("3) Ajouter une connexion");
-            System.out.println("4) Valider le réseau");
-            System.out.println("5) Fin");
+            System.out.println("4)Supprimer une connexion");
+            System.out.println("5) Valider le réseau");
+            System.out.println("6) Fin");
             System.out.print("Votre choix : ");
             String choix = scanner.nextLine();
 
@@ -36,7 +37,18 @@ public class Main {
                     String g = parts[0].startsWith("G") ? parts[0] : parts[1];
                     reseau.ajouterConnection(h, g);
                 }
-            } else if (choix.equals("4")) {
+
+            }
+             else if (choix.equals("4")) {
+                System.out.print("Connexion à supprimer (ex: M1 G1) : ");
+                String[] parts = scanner.nextLine().split(" ");
+                if (parts.length == 2) {
+                    String maison = parts[0].startsWith("M") ? parts[0] : parts[1];
+                    String generateur = parts[0].startsWith("G") ? parts[0] : parts[1];
+                    reseau.supprimerConnexion(maison, generateur);
+                }
+
+            } else if (choix.equals("5")) {
                 if (reseau.validerReseau()) {
                     System.out.println("Réseau valide ! Passage au menu de gestion...");
                     break;
