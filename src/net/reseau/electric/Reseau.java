@@ -245,4 +245,38 @@ public class Reseau {
         System.out.printf("Surcharge : %.3f\n", surcharge);
         System.out.printf("Coût total : %.3f\n", cout);
     }
+
+    public void afficherEtatConnexions() {
+        System.out.println("\n--- État des connexions ---");
+        
+        System.out.println("Maisons connectées :");
+        for (String maison : connexions.keySet()) {
+            System.out.println("  " + maison + " -> " + connexions.get(maison));
+        }
+        
+        System.out.println("Maisons non connectées :");
+        for (String maison : maisons.keySet()) {
+            if (!connexions.containsKey(maison)) {
+                System.out.println("  " + maison);
+            }
+        }
+        
+        System.out.println("Générateurs disponibles :");
+        for (String generateur : generateurs.keySet()) {
+            System.out.println("  " + generateur);
+        }
+        System.out.println("---------------------------");
+    }
+
+    public void afficherConnexionsExistantes() {
+        System.out.println("\n--- Connexions existantes ---");
+        if (connexions.isEmpty()) {
+            System.out.println("Aucune connexion existante.");
+        } else {
+            for (Map.Entry<String, String> entry : connexions.entrySet()) {
+                System.out.println("  " + entry.getKey() + " -> " + entry.getValue());
+            }
+        }
+        System.out.println("-----------------------------");
+    }
 }
