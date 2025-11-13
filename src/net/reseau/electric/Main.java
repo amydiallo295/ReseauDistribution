@@ -57,15 +57,21 @@ public class Main {
                     }
                     break;
                 case "5":
-                    System.out.println("Fin du programme");
-                    break;
+                    // Vérifier que chaque maison est connectée à exactement un générateur
+                    if (reseau.validerReseau()) {
+                        System.out.println("Réseau validé avec succès ! Passage au menu de gestion du réseau.");
+                        break;
+                    } else {
+                        System.out.println("\nProblème détecté dans le réseau. Veuillez corriger avant de continuer.");
+                        continue; // Retour au menu principal
+                    }
                 
                 default:
                     System.out.println("Choix invalide. Veuillez entrer un numéro entre 1 et 5.");
                     break;
             }
             
-            if (choix.equals("5")) {
+            if (choix.equals("5") && reseau.validerReseau()) {
                 break;
             }
         }
