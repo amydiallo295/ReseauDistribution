@@ -58,7 +58,6 @@ public class Main {
                     break;
                 case "5":
                     System.out.println("Fin du programme");
-                    scanner.close();
                     break;
                 
                 default:
