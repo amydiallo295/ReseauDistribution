@@ -63,8 +63,8 @@ public class Reseau {
         if (nouvelleCharge > generateur.getCapacite()) {
             System.out.println("Erreur : connecter " + nomMaison + " à " + nomGenerateur +
                              " provoquerait une surcharge (" + nouvelleCharge + "/" + 
-                             generateur.getCapacite() + " kW). Connexion refusée.");
-            return; // Empêche la connexion
+                             generateur.getCapacite() + " kW");
+           
         }
         
         // Ajout de la connexion (seulement si pas de surcharge)
