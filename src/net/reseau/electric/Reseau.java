@@ -98,7 +98,7 @@ public class Reseau {
 }
 
 
-    public void enleverConnection(String nomMaison) {
+    public void enleverConnectionMaison(String nomMaison) {
         connexions.remove(nomMaison);
     }
 
