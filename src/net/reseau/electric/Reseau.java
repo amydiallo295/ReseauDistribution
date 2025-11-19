@@ -72,7 +72,7 @@ public class Reseau {
         System.out.println("Connexion ajoutée : " + nomMaison + " -> " + nomGenerateur);
     }
 
-    public void supprimerConnexion(String nomMaison, String nomGenerateur) {
+    public void supprimerConnection(String nomMaison, String nomGenerateur) {
         // Méthode permettant de supprimer une connexion entre une maison et un générateur
     // Vérifier que la maison existe
     if (!maisons.containsKey(nomMaison)) {
