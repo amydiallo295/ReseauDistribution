@@ -101,7 +101,7 @@ public class Main {
                             System.out.println("Erreur : cette connexion n'existe pas.");
                             break;
                         }
-                        reseau.enleverConnection(h);
+                        reseau.enleverConnectionMaison(h);
                         System.out.print("Nouvelle connexion (ex: M1 G2) : ");
                         String[] newConn = scanner.nextLine().split(" ");
                         if (newConn.length == 2) {
