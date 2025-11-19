@@ -41,7 +41,7 @@ public class Main {
                     if (parts3.length == 2) {
                         String h = parts3[0].startsWith("M") ? parts3[0] : parts3[1];
                         String g = parts3[0].startsWith("G") ? parts3[0] : parts3[1];
-                        reseau.ajouterConnection(h, g);
+                        reseau.ajouterConnexion(h, g);
                     }
                     break;
                 
@@ -53,7 +53,7 @@ public class Main {
                     if (parts4.length == 2) {
                         String maison = parts4[0].startsWith("M") ? parts4[0] : parts4[1];
                         String generateur = parts4[0].startsWith("G") ? parts4[0] : parts4[1];
-                        reseau.supprimerConnection(maison, generateur);
+                        reseau.supprimerConnexion(maison, generateur);
                     }
                     break;
                 case "5":
@@ -97,17 +97,17 @@ public class Main {
                     String[] oldConn = scanner.nextLine().split(" ");
                     if (oldConn.length == 2) {
                         String h = oldConn[0].startsWith("M") ? oldConn[0] : oldConn[1];
-                        if (!reseau.connectionExiste(h)) {
+                        if (!reseau.connexionExiste(h)) {
                             System.out.println("Erreur : cette connexion n'existe pas.");
                             break;
                         }
-                        reseau.enleverConnectionMaison(h);
+                        reseau.enleverConnexionMaison(h);
                         System.out.print("Nouvelle connexion (ex: M1 G2) : ");
                         String[] newConn = scanner.nextLine().split(" ");
                         if (newConn.length == 2) {
                             String newH = newConn[0].startsWith("M") ? newConn[0] : newConn[1];
                             String newG = newConn[0].startsWith("G") ? newConn[0] : newConn[1];
-                            reseau.ajouterConnection(newH, newG);
+                            reseau.ajouterConnexion(newH, newG);
                         }
                     }
                     break;
