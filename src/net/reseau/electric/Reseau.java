@@ -25,7 +25,7 @@ public class Reseau {
         }
     }
 
-    public void ajouterConnection(String nomMaison, String nomGenerateur){
+    public void ajouterConnexion(String nomMaison, String nomGenerateur){
         /* Méthode permettant d'ajouter des connexions dans la liste des connexions */
         
         // Vérification de l'existence de la maison
@@ -72,7 +72,7 @@ public class Reseau {
         System.out.println("Connexion ajoutée : " + nomMaison + " -> " + nomGenerateur);
     }
 
-    public void supprimerConnection(String nomMaison, String nomGenerateur) {
+    public void supprimerConnexion(String nomMaison, String nomGenerateur) {
         // Méthode permettant de supprimer une connexion entre une maison et un générateur
     // Vérifier que la maison existe
     if (!maisons.containsKey(nomMaison)) {
@@ -98,11 +98,11 @@ public class Reseau {
 }
 
 
-    public void enleverConnectionMaison(String nomMaison) {
+    public void enleverConnexionMaison(String nomMaison) {
         connexions.remove(nomMaison);
     }
 
-    public boolean connectionExiste(String nomMaison) {
+    public boolean connexionExiste(String nomMaison) {
         return connexions.containsKey(nomMaison);
     }
 
@@ -124,7 +124,7 @@ public class Reseau {
         System.out.println("---------------------\n");
     }
 
-    public boolean verifierConnection() {
+    public boolean verifierConnexion() {
         boolean ok = true;
         for (String m : maisons.keySet()) {
             if (!connexions.containsKey(m)) {
@@ -206,11 +206,11 @@ public class Reseau {
     public void calculerCout() {
         // Vérifier d'abord que le réseau respecte toutes les restrictions
         if (!validerReseau()) {
-            System.out.println("\n❌ Impossible de calculer le coût : le réseau ne respecte pas toutes les restrictions.");
+            System.out.println("\nImpossible de calculer le coût : le réseau ne respecte pas toutes les restrictions.");
             return;
         }
         
-        System.out.println("\n📊 Calcul du coût du réseau...");
+        System.out.println("\nCalcul du coût du réseau...");
         final int lambda = 10;
         Map<String, Integer> charge = new HashMap<>();
         for (String g : generateurs.keySet()) charge.put(g, 0);
