@@ -61,9 +61,9 @@ public class Reseau {
         // Vérifier si la connexion provoque une surcharge
         int nouvelleCharge = chargeActuelle + maison.getDemande();
         if (nouvelleCharge > generateur.getCapacite()) {
-            System.out.println("Erreur : connecter " + nomMaison + " à " + nomGenerateur +
+            System.out.println("Avertissement : connecter " + nomMaison + " à " + nomGenerateur +
                              " provoquerait une surcharge (" + nouvelleCharge + "/" + 
-                             generateur.getCapacite() + " kW");
+                             generateur.getCapacite() + " kW)");
            
         }
         
