@@ -53,7 +53,7 @@ public class Main {
                     if (parts4.length == 2) {
                         String maison = parts4[0].startsWith("M") ? parts4[0] : parts4[1];
                         String generateur = parts4[0].startsWith("G") ? parts4[0] : parts4[1];
-                        reseau.supprimerConnexion(maison, generateur);
+                        reseau.supprimerConnection(maison, generateur);
                     }
                     break;
                 case "5":
