@@ -141,7 +141,7 @@ public class Reseau {
     public boolean validerReseau() {
         boolean valide = true;
         
-        // Restriction 1: Le réseau contient toujours au moins une maison et un générateur
+        // Restriction 1: Le réseau doit contenir toujours au moins une maison et un générateur
         if (maisons.isEmpty()) {
             System.out.println("ERREUR: Le réseau doit contenir au moins une maison.");
             valide = false;
@@ -188,14 +188,13 @@ public class Reseau {
         
         if (sommeDemandes > sommeCapacites) {
             System.out.println("ERREUR: La somme des demandes (" + sommeDemandes + 
-                             " kW) dépasse la somme des capacités disponibles (" + 
-                             sommeCapacites + " kW).");
+            " kW) dépasse la somme des capacités disponibles (" + sommeCapacites + " kW).");
             System.out.println("Il est impossible de satisfaire toutes les demandes avec cette configuration.");
             valide = false;
         }
         
         if (valide) {
-            System.out.println("✓ Toutes les restrictions du réseau sont respectées.");
+            System.out.println("Toutes les restrictions du réseau sont respectées.");
             System.out.println("  - Demande totale: " + sommeDemandes + " kW");
             System.out.println("  - Capacité totale: " + sommeCapacites + " kW");
         }
