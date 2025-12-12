@@ -1,3 +1,5 @@
+package net.reseau.electric;
+
 public class Generateur {
     private final String nom;
     private final int capacite;
