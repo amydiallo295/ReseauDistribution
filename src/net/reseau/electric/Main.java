@@ -1,3 +1,5 @@
+package net.reseau.electric;
+
 import java.util.Scanner;
 
 public class Main {
