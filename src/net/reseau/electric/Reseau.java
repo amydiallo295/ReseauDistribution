@@ -1,3 +1,5 @@
+package net.reseau.electric;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -277,5 +279,70 @@ public class Reseau {
             }
         }
         System.out.println("-----------------------------");
+    }
+
+    // Getters pour l'algorithme d'optimisation
+    public Map<String, Generateur> getGenerateurs() {
+        return generateurs;
+    }
+
+    public Map<String, Maison> getMaisons() {
+        return maisons;
+    }
+
+    public Map<String, String> getConnexions() {
+        return connexions;
+    }
+
+    /**
+     * Calcule les charges actuelles de chaque générateur
+     * @return Map associant chaque générateur à sa charge actuelle
+     */
+    public Map<String, Integer> getCharges() {
+        Map<String, Integer> charges = new HashMap<>();
+        for (String g : generateurs.keySet()) {
+            charges.put(g, 0);
+        }
+        for (Map.Entry<String, String> entry : connexions.entrySet()) {
+            String maison = entry.getKey();
+            String generateur = entry.getValue();
+            charges.put(generateur, charges.get(generateur) + maisons.get(maison).getDemande());
+        }
+        return charges;
+    }
+
+    /**
+     * Calcule le coût total du réseau selon la formule : Disp + lambda * Surcharge
+     * @param lambda coefficient de pénalisation de la surcharge
+     * @return le coût total
+     */
+    public double calculerCoutTotal(int lambda) {
+        Map<String, Integer> charge = getCharges();
+        
+        // Calcul des taux d'utilisation
+        Map<String, Double> utilisation = new HashMap<>();
+        double sommeUtilisation = 0.0;
+        for (String g : generateurs.keySet()) {
+            double u = (double) charge.get(g) / generateurs.get(g).getCapacite();
+            utilisation.put(g, u);
+            sommeUtilisation += u;
+        }
+        double utilisationMoyenne = sommeUtilisation / generateurs.size();
+        
+        // Dispersion
+        double disp = 0.0;
+        for (double u : utilisation.values()) {
+            disp += Math.abs(u - utilisationMoyenne);
+        }
+        
+        // Surcharge
+        double surcharge = 0.0;
+        for (String g : generateurs.keySet()) {
+            int depassement = charge.get(g) - generateurs.get(g).getCapacite();
+            if (depassement > 0)
+                surcharge += (double) depassement / generateurs.get(g).getCapacite();
+        }
+        
+        return disp + lambda * surcharge;
     }
 }
