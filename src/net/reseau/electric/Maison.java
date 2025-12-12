@@ -1,3 +1,5 @@
+package net.reseau.electric;
+
 public class Maison {
     private String nom;
     private TypeMaison type;
