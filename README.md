@@ -16,8 +16,20 @@ javac -d bin -sourcepath src src/net/reseau/electric/*.java src/net/reseau/elect
 ```
 
 ### Exécution
+
+**Sans argument** (mode interactif) :
 ```bash
 java -cp bin net.reseau.electric.Main
+```
+
+**Avec argument** (import d'un fichier) :
+```bash
+java -cp bin net.reseau.electric.Main <chemin_fichier>
+```
+
+Exemple :
+```bash
+java -cp bin net.reseau.electric.Main instance1.txt
 ```
 
 ## Structure du projet
