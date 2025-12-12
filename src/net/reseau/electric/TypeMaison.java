@@ -1,3 +1,5 @@
+package net.reseau.electric;
+
 public enum TypeMaison {
     BASSE(10),
     NORMALE(20),
