@@ -112,6 +112,25 @@ Le coût est calculé selon : **Coût = Dispersion + λ × Surcharge**
    - Affichage détaillé de l'état du réseau
    - Messages d'erreur explicites
 
+## Informations complémentaires
+
+## Dossiers du projet
+
+- **`lib/`** : Contient les bibliothèques externes nécessaires au projet
+  - `junit-platform-console-standalone-1.9.3.jar` : Framework JUnit 5 pour l'exécution des tests unitaires
+
+- **`.vscode/`** : Contient la configuration spécifique à l'éditeur Visual Studio Code
+  - Paramètres de l'éditeur
+  - Configurations de débogage
+  - Extensions recommandées
+  - Paramètres du workspace
+
+- **`test/`** : Contient tous les tests unitaires du projet
+  - `GenerateurTest.java` : Tests pour la classe Generateur
+  - `MaisonTest.java` : Tests pour la classe Maison
+  - `ReseauTest.java` : Tests pour la classe Reseau
+  - Utilise JUnit 5 comme framework de tests
+
 ## Collaborateurs
 - Aminata Diallo
 - Elodie Cao
