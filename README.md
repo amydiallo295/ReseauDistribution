@@ -32,63 +32,7 @@ Exemple :
 java -cp bin net.reseau.electric.Main instance1.txt
 ```
 
-## 🔧 Résolution de problèmes après clonage
-
-Si vous rencontrez des erreurs après avoir cloné le projet, suivez ces étapes :
-
-### Erreur : "package org.junit.jupiter.api does not exist"
-
-**Cause** : La bibliothèque JUnit n'est pas trouvée.
-
-**Solutions** :
-1. Vérifiez que le fichier `lib/junit-platform-console-standalone-1.9.3.jar` existe
-2. Si le fichier est manquant, téléchargez JUnit 5 :
-   ```bash
-   mkdir -p lib
-   curl -o lib/junit-platform-console-standalone-1.9.3.jar https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.9.3/junit-platform-console-standalone-1.9.3.jar
-   ```
-3. Dans VS Code :
-   - Ouvrez la palette de commandes : `Cmd + Shift + P` (Mac) ou `Ctrl + Shift + P` (Windows/Linux)
-   - Tapez : `Java: Clean Java Language Server Workspace`
-   - Sélectionnez "Restart and delete"
-   - Rechargez la fenêtre : `Developer: Reload Window`
-
-### Erreur : "cannot find symbol: class Maison/Generateur/Reseau"
-
-**Cause** : Les classes du projet ne sont pas trouvées ou le projet n'est pas correctement compilé.
-
-**Solutions** :
-1. Vérifiez que le fichier `.vscode/settings.json` existe avec le bon contenu :
-   ```json
-   {
-       "java.project.sourcePaths": ["src", "test"],
-       "java.project.outputPath": "bin",
-       "java.project.referencedLibraries": ["lib/**/*.jar"]
-   }
-   ```
-
-2. Compilez manuellement le projet :
-   ```bash
-   mkdir -p bin
-   javac -d bin -sourcepath src src/net/reseau/electric/*.java src/net/reseau/electric/algoOptimal/*.java src/net/reseau/electric/io/*.java
-   ```
-
-3. Nettoyez le workspace Java dans VS Code :
-   - `Cmd + Shift + P` → `Java: Clean Java Language Server Workspace`
-   - Cliquez sur "Restart and delete"
-   - `Cmd + Shift + P` → `Developer: Reload Window`
-
-### Vérification de la configuration
-
-Pour vérifier que tout fonctionne :
-```bash
-# 1. Compilation
-javac -d bin -sourcepath src src/net/reseau/electric/*.java src/net/reseau/electric/algoOptimal/*.java src/net/reseau/electric/io/*.java
-
-# 2. Exécution
-java -cp bin net.reseau.electric.Main
-
-# 3. Tests (si JUnit est configuré)
+**Tests** 
 java -jar lib/junit-platform-console-standalone-1.9.3.jar --class-path bin:test --scan-class-path
 ```
 
