@@ -1,11 +1,37 @@
 package net.reseau.electric;
 
+import net.reseau.electric.io.ReseauImporter;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Reseau reseau = new Reseau();
+        Reseau reseau;
         Scanner scanner = new Scanner(System.in);
+
+        // Si un fichier est passé en argument, l'importer
+        if (args.length > 0) {
+            try {
+                System.out.println("Import du réseau depuis le fichier : " + args[0]);
+                reseau = ReseauImporter.importer(args[0]);
+                System.out.println("Import réussi !");
+                reseau.afficher();
+                
+                // Validation du réseau importé
+                if (!reseau.validerReseau()) {
+                    System.out.println("\nAttention : Le réseau importé ne respecte pas toutes les contraintes.");
+                }
+                
+                // Passer directement au menu de gestion
+                menuGestion(reseau, scanner);
+                return;
+            } catch (Exception e) {
+                System.err.println("Erreur lors de l'import du fichier : " + e.getMessage());
+                System.out.println("Démarrage en mode création manuelle...\n");
+                reseau = new Reseau();
+            }
+        } else {
+            reseau = new Reseau();
+        }
 
         // Premier menu : création du réseau
         while (true) {
@@ -78,6 +104,13 @@ public class Main {
             }
         }
 
+        menuGestion(reseau, scanner);
+    } // Fermeture de la méthode main
+
+    /**
+     * Menu de gestion du réseau (après création ou import)
+     */
+    private static void menuGestion(Reseau reseau, Scanner scanner) {
         // Second menu : gestion du réseau
         while (true) {
             System.out.println("\nMenu réseau :");
