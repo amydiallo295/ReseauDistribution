@@ -29,7 +29,7 @@ java -cp bin net.reseau.electric.Main <chemin_fichier>
 
 Exemple :
 ```bash
-java -cp bin net.reseau.electric.Main instance1.txt
+java -cp bin net.reseau.electric.Main src/net/reseau/electric/io/instance1.txt
 ```
 
 **Tests** 
