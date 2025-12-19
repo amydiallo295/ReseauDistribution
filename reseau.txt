@@ -1,0 +1,3 @@
+generateur(G1,60).
+maison(M1,BASSE).
+connexion(M1,G1).

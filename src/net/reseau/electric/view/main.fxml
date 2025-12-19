@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="net.reseau.electric.gui.MainController" spacing="10" alignment="CENTER" prefWidth="600" prefHeight="500">
+    
+    <TextArea fx:id="textArea" prefHeight="300" prefWidth="580" wrapText="true"/>
+    
+    <HBox spacing="10">
+        <Button fx:id="btnAjouterGenerateur" text="Ajouter Générateur" onAction="#ajouterGenerateur"/>
+        <Button fx:id="btnAjouterMaison" text="Ajouter Maison" onAction="#ajouterMaison"/>
+        <Button fx:id="btnAjouterConnexion" text="Ajouter Connexion" onAction="#ajouterConnexion"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Button text="Calculer Coût" onAction="#calculerCout"/>
+        <Button text="Résolution Auto" onAction="#resoudreAutomatique"/>
+        <Button text="Sauvegarder Réseau" onAction="#sauvegarderReseau"/>
+        <Button fx:id="btnFin" text="Fin" onAction="#finProgramme"/>
+    </HBox>
+
+</VBox>
