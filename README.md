@@ -17,6 +17,8 @@ javac -d bin -sourcepath src src/net/reseau/electric/*.java src/net/reseau/elect
 
 ### Exécution
 
+#### Mode console
+
 **Sans argument** (mode interactif) :
 ```bash
 java -cp bin net.reseau.electric.Main
@@ -32,7 +34,34 @@ Exemple :
 java -cp bin net.reseau.electric.Main src/net/reseau/electric/io/instance1.txt
 ```
 
-**Tests** 
+#### Interface graphique (JavaFX)
+
+**Note importante** : L'interface graphique nécessite JavaFX qui n'est pas inclus dans le projet à part les fichiers .jar
+
+**Résumé rapide :**
+
+1. Téléchargez JavaFX SDK 25.0.1 depuis https://gluonhq.com/products/javafx/ (choisir la version correspondant au système)
+
+2. Compilation avec JavaFX :
+```bash
+# macOS/Linux
+javac --module-path /chemin/vers/javafx-sdk-25.0.1/lib \--add-modules javafx.controls,javafx.fxml \-d bin \src/net/reseau/electric/*.java \src/net/reseau/electric/**/*.java
+
+# Windows
+javac --module-path "C:\chemin\vers\javafx-sdk-25.0.1\lib" ^--add-modules javafx.controls,javafx.fxml ^-d bin ^src/net/reseau/electric/*.java ^src/net/reseau/electric/**/*.java
+```
+
+3. Exécution de l'interface graphique :
+```bash
+# macOS/Linux
+java --module-path /chemin/vers/javafx-sdk-25.0.1/lib \--add-modules javafx.controls,javafx.fxml \-cp bin \net.reseau.electric.gui.MainFX
+
+# Windows
+java --module-path "C:\chemin\vers\javafx-sdk-25.0.1\lib" ^--add-modules javafx.controls,javafx.fxml ^-cp bin ^net.reseau.electric.gui.MainFX
+```
+
+#### Tests 
+```bash
 java -jar lib/junit-platform-console-standalone-1.9.3.jar --class-path bin:test --scan-class-path
 ```
 
