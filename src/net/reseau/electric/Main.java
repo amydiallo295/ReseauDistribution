@@ -79,8 +79,8 @@ public class Main {
                         }
                         break;
                     case "2":
-                        System.out.print("Nom et type de la maison (ex: M1 NORMALE) : ");
-                        System.out.print("\nTypes de maisons existantes : BASSE (10 kW), NORMALE (20 kW), FORTE (40 kW)\n");
+                        System.out.print("Nom et type de la maison (ex: M1 NORMAL) : ");
+                        System.out.print("\nTypes de maisons existantes : BASSE (10 kW), NORMAL (20 kW), FORTE (40 kW)\n");
                         String[] parts2 = scanner.nextLine().split(" ");
                         if (parts2.length == 2) {
                             reseau.ajouterMaison(parts2[0], parts2[1]);

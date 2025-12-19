@@ -122,7 +122,7 @@ Le coût est calculé selon : **Coût = Dispersion + λ × Surcharge**
 
 1. **Gestion du réseau**
    - Ajout de générateurs avec capacité
-   - Ajout de maisons avec 3 types (BASSE: 10kW, NORMALE: 20kW, FORTE: 40kW)
+   - Ajout de maisons avec 3 types (BASSE: 10kW, NORMAL: 20kW, FORTE: 40kW)
    - Ajout de connexions maison-générateur
    - Suppression de connexions
    - Modification de connexions
