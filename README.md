@@ -176,10 +176,10 @@ java -jar lib/junit-platform-console-standalone-1.9.3.jar --class-path bin:test 
 - Converge vers des solutions de haute qualité
 - Plus rapide et efficace que l'algorithme naïf
 
-#### Paramètres recommandés
-- **lambda** : 10000 (coefficient de pénalisation des surcharges)
-- **iterations** : 10 à 20 (nombre de constructions-améliorations)
-- **alpha** : 0.3 (degré de randomisation, entre 0 et 1)
+#### Paramètres 
+- **lambda** : coefficient de pénalisation des surcharges
+- **iterations** : nombre de constructions-améliorations
+- **alpha** : degré de randomisation, entre 0 et 1
 
 #### Formule de coût
 Le coût est calculé selon : **Coût = Dispersion + λ × Surcharge**
