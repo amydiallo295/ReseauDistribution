@@ -23,7 +23,7 @@ public class Reseau {
             }
             maisons.put(nom, new Maison(nom, type));
         } catch (IllegalArgumentException e) {
-            System.out.println("Type inconnu. Utilisez BASSE, NORMALE ou FORTE.");
+            System.out.println("Type inconnu pour la maison " + nom + " (" + typeStr + "). Utilisez BASSE, NORMAL ou FORTE.");
         }
     }
 

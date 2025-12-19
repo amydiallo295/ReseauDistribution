@@ -58,8 +58,8 @@ public class MainFX extends Application {
     // ==================== Méthode pour le mode manuel ====================
     private VBox createManuelLayout() {
         // Initialisation ComboBox types de maison
-        cbTypeMaison.getItems().addAll("BASSE", "NORMALE", "FORTE");
-        cbTypeMaison.setValue("NORMALE");
+        cbTypeMaison.getItems().addAll("BASSE", "NORMAL", "FORTE");
+        cbTypeMaison.setValue("NORMAL");
 
         tfNomGenerateur = new TextField();
         tfCapaciteGenerateur = new TextField();
