@@ -5,7 +5,7 @@ Projet Java : Réseau de distribution d'électricité
 ## Description
 Application pour gérer et simuler la distribution d'électricité avec import/export de fichiers et algorithme d'optimisation.
 
-## Exécution du programme
+## Exécution du programme dans le terminal
 
 ### Classe principale
 La méthode `main` se trouve dans la classe : **`net.reseau.electric.Main`**
