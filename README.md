@@ -45,11 +45,11 @@ java -cp bin net.reseau.electric.Main src/net/reseau/electric/io/instance1.txt
 2. Compilation avec JavaFX :
 ```bash
 # macOS/Linux
-# Remplacer /chemin/vers/javafx-sdk-25.0.1/lib par le chemin réel
+# Remplacer /chemin/vers/javafx-sdk-25.0.1/lib par le chemin réel de celui qui se trouve dans ReseauDistribution ou celui utilisé auparavant
 javac --module-path "/chemin/vers/javafx-sdk-25.0.1/lib" --add-modules javafx.controls,javafx.fxml -d bin src/net/reseau/electric/*.java src/net/reseau/electric/**/*.java
 
-# Exemple macOS :
-# javac --module-path "/Users/votreNom/Downloads/javafx-sdk-25.0.1/lib" --add-modules javafx.controls,javafx.fxml -d bin src/net/reseau/electric/*.java src/net/reseau/electric/**/*.java
+Exemple : 
+javac --module-path "/Users/yennhi/Documents/PAA/ProjetPAA/ReseauDistribution/javafx-sdk-25.0.1/lib" --add-modules javafx.controls,javafx.fxml -d bin src/net/reseau/electric/*.java src/net/reseau/electric/**/*.java
 
 # Windows
 javac --module-path "C:\chemin\vers\javafx-sdk-25.0.1\lib" --add-modules javafx.controls,javafx.fxml -d bin src/net/reseau/electric/*.java src/net/reseau/electric/**/*.java
