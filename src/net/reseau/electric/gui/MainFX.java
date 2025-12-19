@@ -37,7 +37,6 @@ public class MainFX extends Application {
         textArea.setEditable(false);
         textArea.setPrefHeight(300);
 
-        // Choisir mode
         ChoiceDialog<String> modeDialog = new ChoiceDialog<>("Manuel", "Manuel", "Automatique");
         modeDialog.setTitle("Choix du mode");
         modeDialog.setHeaderText("Choisissez le mode de réseau");
@@ -46,7 +45,7 @@ public class MainFX extends Application {
         modeDialog.showAndWait().ifPresent(mode -> {
             if (mode.equals("Manuel")) {
                 VBox manuelLayout = createManuelLayout();
-                primaryStage.setScene(new Scene(manuelLayout, 600, 500));
+                primaryStage.setScene(new Scene(manuelLayout, 650, 500));
                 primaryStage.show();
             } else {
                 VBox autoLayout = createAutoLayout();
@@ -56,6 +55,7 @@ public class MainFX extends Application {
         });
     }
 
+    // ==================== Méthode pour le mode manuel ====================
     private VBox createManuelLayout() {
         // Initialisation ComboBox types de maison
         cbTypeMaison.getItems().addAll("BASSE", "NORMALE", "FORTE");
@@ -79,11 +79,14 @@ public class MainFX extends Application {
         Button btnSupprimerConnexion = new Button("Supprimer Connexion");
         btnSupprimerConnexion.setOnAction(e -> supprimerConnexion());
 
+        Button btnModifierConnexion = new Button("Modifier Connexion");
+        btnModifierConnexion.setOnAction(e -> modifierConnexion());
+
         Button btnCalculerCout = new Button("Calculer Coût");
-        btnCalculerCout.setOnAction(e -> reseau.calculerCout());
+        btnCalculerCout.setOnAction(e -> textArea.appendText(reseau.calculerCoutString() + "\n"));
 
         Button btnAfficherReseau = new Button("Afficher Réseau");
-        btnAfficherReseau.setOnAction(e -> reseau.afficher());
+        btnAfficherReseau.setOnAction(e -> textArea.appendText(reseau.afficherString() + "\n"));
 
         Button btnFin = new Button("Fin");
         btnFin.setOnAction(e -> stage.close());
@@ -105,22 +108,33 @@ public class MainFX extends Application {
         grid.add(cbTypeMaison, 1, 3);
         grid.add(btnAjouterMaison, 2, 2, 1, 2);
 
-        grid.add(new Label("Maison Connexion:"), 0, 4);
+        grid.add(new Label("Maison à Connecter:"), 0, 4);
         grid.add(tfMaisonConnexion, 1, 4);
-        grid.add(new Label("Générateur Connexion:"), 0, 5);
+        grid.add(new Label("Générateur à Connecter:"), 0, 5);
         grid.add(tfGenerateurConnexion, 1, 5);
         grid.add(btnAjouterConnexion, 2, 4);
-        grid.add(btnSupprimerConnexion, 2, 5);
 
-        HBox hBoxBottom = new HBox(5, btnCalculerCout, btnAfficherReseau, btnFin);
+
+        HBox hBoxBottom = new HBox(
+        5,
+        btnCalculerCout,
+        btnSupprimerConnexion,
+        btnModifierConnexion,
+        btnAfficherReseau,
+        btnFin
+);
+
         VBox layout = new VBox(10, grid, textArea, hBoxBottom);
+
         return layout;
     }
 
+    // ==================== Méthode pour le mode automatique ====================
     private VBox createAutoLayout() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisir fichier réseau");
         File file = fileChooser.showOpenDialog(stage);
+
         if (file != null) {
             try {
                 reseau = ReseauImporter.importer(file.getAbsolutePath());
@@ -169,7 +183,7 @@ public class MainFX extends Application {
         return layout;
     }
 
-    // ==================== Fonctions MANUEL ====================
+    // ==================== Fonctions boutons Manuel ====================
     private void ajouterGenerateur() {
         String nom = tfNomGenerateur.getText().trim();
         String capStr = tfCapaciteGenerateur.getText().trim();
@@ -197,40 +211,17 @@ public class MainFX extends Application {
         textArea.appendText("Maison ajoutée : " + nom + " - " + type + "\n");
     }
 
-@FXML
-private void ajouterConnexion() {
-    String input = tfMaisonConnexion.getText().trim();
-    if (input.isEmpty()) {
-        textArea.appendText("Erreur : nom de la maison et du générateur requis.\n");
-        return;
-    }
-
-    String[] parts = input.split(" ");
-    if (parts.length != 2) {
-        textArea.appendText("Erreur : veuillez entrer exactement deux identifiants (maison et générateur).\n");
-        return;
-    }
-
-    String maison = null;
-    String generateur = null;
-
-    for (String part : parts) {
-        if (part.toUpperCase().startsWith("M")) {
-            maison = part;
-        } else if (part.toUpperCase().startsWith("G")) {
-            generateur = part;
+    @FXML
+    private void ajouterConnexion() {
+        String maison = tfMaisonConnexion.getText().trim();
+        String generateur = tfGenerateurConnexion.getText().trim();
+        if (maison.isEmpty() || generateur.isEmpty()) {
+            textArea.appendText("Erreur : maison et générateur requis.\n");
+            return;
         }
+        reseau.ajouterConnexion(maison, generateur);
+        textArea.appendText("Connexion ajoutée : " + maison + " -> " + generateur + "\n");
     }
-
-    if (maison == null || generateur == null) {
-        textArea.appendText("Erreur : impossible de détecter la maison ou le générateur.\n");
-        return;
-    }
-
-    reseau.ajouterConnexion(maison, generateur);
-    textArea.appendText("Connexion ajoutée : " + maison + " -> " + generateur + "\n");
-}
-
 
     private void supprimerConnexion() {
         String maison = tfMaisonConnexion.getText().trim();
@@ -241,4 +232,17 @@ private void ajouterConnexion() {
         reseau.enleverConnexionMaison(maison);
         textArea.appendText("Connexion supprimée pour : " + maison + "\n");
     }
+
+    private void modifierConnexion() {
+        String maison = tfMaisonConnexion.getText().trim();
+        String generateur = tfGenerateurConnexion.getText().trim();
+        if (!reseau.connexionExiste(maison)) {
+            textArea.appendText("Erreur : cette connexion n'existe pas.\n");
+            return;
+        }
+        reseau.enleverConnexionMaison(maison);
+        reseau.ajouterConnexion(maison, generateur);
+        textArea.appendText("Connexion modifiée : " + maison + " -> " + generateur + "\n");
+    }
 }
+

@@ -345,4 +345,20 @@ public class Reseau {
         
         return disp + lambda * surcharge;
     }
+// modification pour javafx
+    public String calculerCoutString() {
+    // On calcule le coût total mais au lieu d'afficher, on renvoie une chaîne
+    double cout = this.calculerCoutTotal(10); // ou une version sans paramètre si nécessaire
+    return String.format("Coût du réseau : %.2f", cout);
+}
+
+public String afficherString() {
+    StringBuilder sb = new StringBuilder();
+    // Parcourir les maisons et leurs générateurs
+    for (String maison : this.getMaisons().keySet()) {
+        String gen = this.getConnexions().get(maison);
+        sb.append(maison).append(" -> ").append(gen).append("\n");
+    }
+    return sb.toString();
+}
 }
