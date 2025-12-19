@@ -1,12 +1,12 @@
-package net.reseau.electrique;
+package net.reseau.electric;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GenerateurTest {
+public class MaisonTest {
     
-    private Generateur generateur;
+    private Maison maison;
     
     @BeforeEach
     public void setUp() {
@@ -14,7 +14,7 @@ public class GenerateurTest {
     }
     
     @Test
-    public void testCreationGenerateur() {
+    public void testCreationMaison() {
         // TODO: Implémenter les tests
     }
 }

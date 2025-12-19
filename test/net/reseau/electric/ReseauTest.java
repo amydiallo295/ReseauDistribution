@@ -1,4 +1,4 @@
-package net.reseau.electrique;
+package net.reseau.electric;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
