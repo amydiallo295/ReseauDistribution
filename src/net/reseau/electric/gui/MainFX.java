@@ -187,6 +187,7 @@ public class MainFX extends Application {
     private void ajouterGenerateur() {
         String nom = tfNomGenerateur.getText().trim();
         String capStr = tfCapaciteGenerateur.getText().trim();
+        
         if (nom.isEmpty() || capStr.isEmpty()) {
             textArea.appendText("Erreur : nom et capacité requis.\n");
             return;
@@ -195,6 +196,9 @@ public class MainFX extends Application {
             int capacite = Integer.parseInt(capStr);
             reseau.ajouterGenerateur(nom, capacite);
             textArea.appendText("Générateur ajouté : " + nom + " - " + capacite + "\n");
+            // Vider les champs
+            tfNomGenerateur.clear();
+            tfCapaciteGenerateur.clear();
         } catch (NumberFormatException e) {
             textArea.appendText("Erreur : capacité invalide.\n");
         }
@@ -209,6 +213,9 @@ public class MainFX extends Application {
         }
         reseau.ajouterMaison(nom, type);
         textArea.appendText("Maison ajoutée : " + nom + " - " + type + "\n");
+        // Vider les champs
+        tfNomMaison.clear();
+        cbTypeMaison.setValue("NORMALE");
     }
 
     @FXML
@@ -221,6 +228,8 @@ public class MainFX extends Application {
         }
         reseau.ajouterConnexion(maison, generateur);
         textArea.appendText("Connexion ajoutée : " + maison + " -> " + generateur + "\n");
+        tfMaisonConnexion.clear();
+        tfGenerateurConnexion.clear();
     }
 
     private void supprimerConnexion() {
@@ -231,6 +240,7 @@ public class MainFX extends Application {
         }
         reseau.enleverConnexionMaison(maison);
         textArea.appendText("Connexion supprimée pour : " + maison + "\n");
+        viderChamps();
     }
 
     private void modifierConnexion() {
@@ -243,6 +253,11 @@ public class MainFX extends Application {
         reseau.enleverConnexionMaison(maison);
         reseau.ajouterConnexion(maison, generateur);
         textArea.appendText("Connexion modifiée : " + maison + " -> " + generateur + "\n");
+        viderChamps();
     }
+
+
+
 }
 
+    
