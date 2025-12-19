@@ -63,13 +63,13 @@ public class Reseau {
         // Vérifier si la connexion provoque une surcharge
         int nouvelleCharge = chargeActuelle + maison.getDemande();
         if (nouvelleCharge > generateur.getCapacite()) {
-            System.out.println("Avertissement : connecter " + nomMaison + " a " + nomGenerateur +
-                             " provoquerait une surcharge (" + nouvelleCharge + "/" + 
-                             generateur.getCapacite() + " kW)");
-           
+            System.out.println("⚠️ AVERTISSEMENT : connecter " + nomMaison + " a " + nomGenerateur +
+                             " provoque une surcharge (" + nouvelleCharge + "/" + 
+                             generateur.getCapacite() + " kW).");
+            System.out.println("   → Vous devez modifier le réseau pour éliminer la surcharge avant de calculer le coût.");
         }
         
-        // Ajout de la connexion (seulement si pas de surcharge)
+        // Ajout de la connexion (même en cas de surcharge)
         connexions.put(nomMaison, nomGenerateur);
         System.out.println("Connexion ajoutee : " + nomMaison + " -> " + nomGenerateur);
     }
@@ -245,6 +245,33 @@ public class Reseau {
         System.out.printf("Dispersion (Disp) : %.3f\n", disp);
         System.out.printf("Surcharge : %.3f\n", surcharge);
         System.out.printf("Coût total : %.3f\n", cout);
+    }
+
+    /**
+     * Vérifie si le réseau contient des générateurs en surcharge
+     * @return true si au moins un générateur est en surcharge, false sinon
+     */
+    public boolean aSurcharge() {
+        Map<String, Integer> charge = new HashMap<>();
+        // Initialiser les charges à 0
+        for (String g : generateurs.keySet()) {
+            charge.put(g, 0);
+        }
+        // Calculer les charges actuelles
+        for (Map.Entry<String, String> entry : connexions.entrySet()) {
+            String maison = entry.getKey();
+            String generateur = entry.getValue();
+            if (maisons.containsKey(maison)) {
+                charge.put(generateur, charge.get(generateur) + maisons.get(maison).getDemande());
+            }
+        }
+        // Vérifier les surcharges
+        for (String g : generateurs.keySet()) {
+            if (charge.get(g) > generateurs.get(g).getCapacite()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void afficherEtatConnexions() {

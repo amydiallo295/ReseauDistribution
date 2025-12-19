@@ -268,17 +268,41 @@ public class MainFX extends Application {
         connSection.setContent(connGrid);
         
         // Boutons d'action
+        VBox actionsContainer = new VBox(10);
+        actionsContainer.setAlignment(Pos.CENTER);
+        actionsContainer.setPadding(new Insets(15, 0, 0, 0));
+        
+        // Bouton vérifier surcharges
+        Button btnCheckSurcharge = new Button("⚠️ Vérifier Surcharges");
+        btnCheckSurcharge.setStyle("-fx-background-color: #FF5722; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+        btnCheckSurcharge.setPrefWidth(200);
+        btnCheckSurcharge.setOnAction(e -> {
+            if (reseau.aSurcharge()) {
+                logError("⚠️ ATTENTION: Le réseau contient des surcharges!");
+                logError("   Modifiez les connexions avant de calculer le coût.");
+                updateStatus("Surcharges détectées!");
+            } else {
+                log("✓ Aucune surcharge détectée");
+                updateStatus("Aucune surcharge");
+            }
+        });
+        
         HBox actions = new HBox(10);
         actions.setAlignment(Pos.CENTER);
-        actions.setPadding(new Insets(15, 0, 0, 0));
         
         Button btnCalc = new Button("💰 Calculer Coût");
         btnCalc.setStyle("-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
         btnCalc.setPrefWidth(150);
         btnCalc.setOnAction(e -> {
-            reseau.calculerCout();
-            log("✓ Calcul du coût effectué");
-            updateStatus("Coût calculé");
+            if (reseau.aSurcharge()) {
+                logError("✗ Impossible de calculer le coût: le réseau contient des surcharges!");
+                logError("   Veuillez modifier les connexions avant de continuer.");
+                updateStatus("Calcul bloqué - Surcharges présentes");
+            } else {
+                reseau.calculerCout();
+                log("✓ Calcul du coût effectué");
+                updateStatus("Coût calculé");
+            }
         });
         
         Button btnValidate = new Button("✓ Valider Réseau");
@@ -295,8 +319,9 @@ public class MainFX extends Application {
         });
         
         actions.getChildren().addAll(btnCalc, btnValidate);
+        actionsContainer.getChildren().addAll(btnCheckSurcharge, actions);
         
-        panel.getChildren().addAll(genSection, maisonSection, connSection, actions);
+        panel.getChildren().addAll(genSection, maisonSection, connSection, actionsContainer);
         return panel;
     }
 
