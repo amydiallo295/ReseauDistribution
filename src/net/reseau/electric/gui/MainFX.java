@@ -556,7 +556,14 @@ public class MainFX extends Application {
         
         Label timeLabel = new Label("⏰ " + java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
         
-        statusBar.getChildren().addAll(statusLabel, spacer, timeLabel);
+        Button btnExit = new Button("🚪 Fin");
+        btnExit.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnExit.setOnAction(e -> {
+            log("👋 Fermeture de l'application...");
+            stage.close();
+        });
+        
+        statusBar.getChildren().addAll(statusLabel, spacer, timeLabel, btnExit);
         
         VBox logBox = new VBox(5, logTitle, logArea);
         logBox.setPadding(new Insets(10));
