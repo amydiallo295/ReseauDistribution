@@ -3,21 +3,42 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="net.reseau.electric.gui.MainController" spacing="10" alignment="CENTER" prefWidth="600" prefHeight="500">
-    
-    <TextArea fx:id="textArea" prefHeight="300" prefWidth="580" wrapText="true"/>
-    
-    <HBox spacing="10">
-        <Button fx:id="btnAjouterGenerateur" text="Ajouter Générateur" onAction="#ajouterGenerateur"/>
-        <Button fx:id="btnAjouterMaison" text="Ajouter Maison" onAction="#ajouterMaison"/>
-        <Button fx:id="btnAjouterConnexion" text="Ajouter Connexion" onAction="#ajouterConnexion"/>
-    </HBox>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="net.reseau.electric.gui.MainController"
+            prefWidth="600" prefHeight="400">
 
-    <HBox spacing="10">
-        <Button text="Calculer Coût" onAction="#calculerCout"/>
-        <Button text="Résolution Auto" onAction="#resoudreAutomatique"/>
-        <Button text="Sauvegarder Réseau" onAction="#sauvegarderReseau"/>
-        <Button fx:id="btnFin" text="Fin" onAction="#finProgramme"/>
-    </HBox>
+    <children>
 
-</VBox>
+        <ComboBox
+            fx:id="cbTypeMaison"
+            layoutX="20"
+            layoutY="20"
+            prefWidth="150"/>
+
+        <Button
+            text="Ajouter Maison"
+            layoutX="200"
+            layoutY="20"
+            onAction="#ajouterMaison"/>
+
+        <Button
+            text="Ajouter Générateur"
+            layoutX="350"
+            layoutY="20"
+            onAction="#ajouterGenerateur"/>
+
+        <Button
+            text="Calculer Réseau"
+            layoutX="200"
+            layoutY="60"
+            onAction="#calculerReseau"/>
+
+        <TextArea
+            fx:id="taOutput"
+            layoutX="20"
+            layoutY="100"
+            prefWidth="560"
+            prefHeight="280"/>
+
+    </children>
+</AnchorPane>
