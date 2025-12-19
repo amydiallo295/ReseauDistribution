@@ -74,8 +74,6 @@ Nous avons choisi d'implémenter l'**algorithme GRASP** (Greedy Randomized Adapt
    - Séparation des responsabilités (import/export, algorithme, modèle)
 
 9. **Documentation**
-   - Commentaires Javadoc pour toutes les classes
-   - Documentation des attributs et méthodes
    - Explications sur les algorithmes utilisés
    - README complet avec instructions d'exécution
 
@@ -83,11 +81,9 @@ Nous avons choisi d'implémenter l'**algorithme GRASP** (Greedy Randomized Adapt
 
 - **Tests unitaires JUnit 5** : Tests pour Generateur, Maison, et Reseau
 - **7 fichiers d'instances** de test fournis
-- **Compatibilité NORMAL/NORMALE** : Accepte les deux orthographes pour les types de maison
 
 #### Problèmes ou limitations
 
-**Aucun problème connu.** Toutes les fonctionnalités demandées sont implémentées et fonctionnent correctement.
 
 ## Structure du projet
 
@@ -121,7 +117,7 @@ javac -d bin -sourcepath src src/net/reseau/electric/*.java src/net/reseau/elect
 
 ### Exécution
 
-#### Avec fichier d'instance (recommandé pour l'évaluation)
+#### Avec fichier d'instance 
 ```bash
 Syntaxe : java -cp bin net.reseau.electric.Main chemin/fichier/nom_instance.txt 
 Exemple : java -cp bin net.reseau.electric.Main src/net/reseau/electric/io/instance1.txt 
