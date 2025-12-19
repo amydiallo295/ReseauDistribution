@@ -1,4 +1,4 @@
-package net.reseau.electric;
+package net.reseau.electrique;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +63,7 @@ public class Reseau {
         // Vérifier si la connexion provoque une surcharge
         int nouvelleCharge = chargeActuelle + maison.getDemande();
         if (nouvelleCharge > generateur.getCapacite()) {
-            System.out.println("Avertissement : connecter " + nomMaison + " à " + nomGenerateur +
+            System.out.println("Avertissement : connecter " + nomMaison + " a " + nomGenerateur +
                              " provoquerait une surcharge (" + nouvelleCharge + "/" + 
                              generateur.getCapacite() + " kW)");
            
@@ -71,7 +71,7 @@ public class Reseau {
         
         // Ajout de la connexion (seulement si pas de surcharge)
         connexions.put(nomMaison, nomGenerateur);
-        System.out.println("Connexion ajoutée : " + nomMaison + " -> " + nomGenerateur);
+        System.out.println("Connexion ajoutee : " + nomMaison + " -> " + nomGenerateur);
     }
 
     public void supprimerConnexion(String nomMaison, String nomGenerateur) {
@@ -281,6 +281,64 @@ public class Reseau {
         System.out.println("-----------------------------");
     }
 
+    // Méthodes qui retournent des String pour l'affichage dans l'interface
+    public String getReseauAsString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n--- Reseau actuel ---\n");
+        sb.append("Generateurs :\n");
+        for (Generateur g : generateurs.values()) {
+            sb.append("  ").append(g.getNom()).append(" (").append(g.getCapacite()).append(" kW)\n");
+        }
+        sb.append("Maisons :\n");
+        for (Maison m : maisons.values()) {
+            sb.append("  ").append(m.getNom()).append(" (").append(m.getType()).append(", ").append(m.getDemande()).append(" kW)\n");
+        }
+        sb.append("Connexions :\n");
+        for (Map.Entry<String, String> entry : connexions.entrySet()) {
+            sb.append("  ").append(entry.getKey()).append(" -> ").append(entry.getValue()).append("\n");
+        }
+        sb.append("---------------------\n");
+        return sb.toString();
+    }
+
+    public String getConnexionsAsString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n--- Connexions existantes ---\n");
+        if (connexions.isEmpty()) {
+            sb.append("Aucune connexion existante.\n");
+        } else {
+            for (Map.Entry<String, String> entry : connexions.entrySet()) {
+                sb.append("  ").append(entry.getKey()).append(" -> ").append(entry.getValue()).append("\n");
+            }
+        }
+        sb.append("-----------------------------\n");
+        return sb.toString();
+    }
+
+    public String getEtatConnexionsAsString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n--- Etat des connexions ---\n");
+        
+        sb.append("Maisons connectees :\n");
+        for (String maison : connexions.keySet()) {
+            sb.append("  ").append(maison).append(" -> ").append(connexions.get(maison)).append("\n");
+        }
+        
+        sb.append("Maisons non connectees :\n");
+        for (String maison : maisons.keySet()) {
+            if (!connexions.containsKey(maison)) {
+                sb.append("  ").append(maison).append("\n");
+            }
+        }
+        
+        sb.append("Generateurs disponibles :\n");
+        for (String generateur : generateurs.keySet()) {
+            sb.append("  ").append(generateur).append("\n");
+        }
+        sb.append("---------------------------\n");
+        return sb.toString();
+    }
+
     // Getters pour l'algorithme d'optimisation
     public Map<String, Generateur> getGenerateurs() {
         return generateurs;
@@ -345,20 +403,4 @@ public class Reseau {
         
         return disp + lambda * surcharge;
     }
-// modification pour javafx
-    public String calculerCoutString() {
-    // On calcule le coût total mais au lieu d'afficher, on renvoie une chaîne
-    double cout = this.calculerCoutTotal(10); // ou une version sans paramètre si nécessaire
-    return String.format("Coût du réseau : %.2f", cout);
-}
-
-public String afficherString() {
-    StringBuilder sb = new StringBuilder();
-    // Parcourir les maisons et leurs générateurs
-    for (String maison : this.getMaisons().keySet()) {
-        String gen = this.getConnexions().get(maison);
-        sb.append(maison).append(" -> ").append(gen).append("\n");
-    }
-    return sb.toString();
-}
 }
