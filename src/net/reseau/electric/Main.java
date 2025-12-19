@@ -9,14 +9,6 @@ public class Main {
     public static void main(String[] args) {
         if (args.length > 0) {
             String chemin = args[0];
-            int lambda = 10; // valeur par défaut
-            if (args.length > 1) {
-                try {
-                    lambda = Integer.parseInt(args[1]);
-                } catch (NumberFormatException e) {
-                    System.out.println("λ (lambda) doit être un entier. Utilisation de la valeur par défaut 10.");
-                }
-            }
             try {
                 Reseau reseau = ReseauImporter.importer(chemin);
                 Scanner scanner = new Scanner(System.in);
@@ -31,6 +23,8 @@ public class Main {
                         case "1":
                             System.out.println("\n=== Résolution automatique (Algorithme GRASP) ===");
                             try {
+                                System.out.print("Valeur de lambda (recommandé: 10000) : ");
+                                int lambda = Integer.parseInt(scanner.nextLine());
                                 System.out.print("Nombre d'itérations GRASP (recommandé: 20) : ");
                                 int iterations = Integer.parseInt(scanner.nextLine());
                                 System.out.print("Paramètre alpha 0-1 (recommandé: 0.3) : ");
