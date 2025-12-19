@@ -396,9 +396,10 @@ public class MainFX extends Application {
             try {
                 int lambda = Integer.parseInt(tfLambda.getText());
                 int k = Integer.parseInt(tfK.getText());
+                double alpha = 0.3; // Paramètre de randomisation fixe
                 log("⚙️ Démarrage optimisation (λ=" + lambda + ", k=" + k + ")...");
                 updateStatus("Optimisation en cours...");
-                AlgoOptimal.resoudreOptimise(reseau, lambda, k);
+                AlgoOptimal.resoudreOptimise(reseau, lambda, k, alpha);
                 log("✓ Optimisation terminée avec succès!");
                 updateStatus("Optimisation terminée");
             } catch (NumberFormatException ex) {

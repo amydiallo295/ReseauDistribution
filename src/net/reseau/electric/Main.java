@@ -1,22 +1,15 @@
+
 package net.reseau.electric;
 
 import java.util.Scanner;
-import net.reseau.electric.io.ReseauImporter;
-import net.reseau.electric.io.ReseauExporter;
 import net.reseau.electric.algoOptimal.AlgoOptimal;
+import net.reseau.electric.io.ReseauExporter;
+import net.reseau.electric.io.ReseauImporter;
 
 public class Main {
     public static void main(String[] args) {
         if (args.length > 0) {
             String chemin = args[0];
-            int lambda = 10; // valeur par défaut
-            if (args.length > 1) {
-                try {
-                    lambda = Integer.parseInt(args[1]);
-                } catch (NumberFormatException e) {
-                    System.out.println("λ (lambda) doit être un entier. Utilisation de la valeur par défaut 10.");
-                }
-            }
             try {
                 Reseau reseau = ReseauImporter.importer(chemin);
                 Scanner scanner = new Scanner(System.in);
@@ -29,9 +22,20 @@ public class Main {
                     String choix = scanner.nextLine();
                     switch (choix) {
                         case "1":
-                            System.out.print("Nombre de tentatives d'échanges (k) : ");
-                            int k = Integer.parseInt(scanner.nextLine());
-                            AlgoOptimal.resoudreOptimise(reseau, lambda, k);
+                            System.out.println("\n=== Résolution automatique (Algorithme GRASP) ===");
+                            try {
+                                System.out.print("Valeur de lambda : ");
+                                int lambda = Integer.parseInt(scanner.nextLine());
+                                System.out.print("Nombre d'itérations GRASP : ");
+                                int iterations = Integer.parseInt(scanner.nextLine());
+                                System.out.print("Paramètre alpha 0-1 (recommandé: 0.3) : ");
+                                double alpha = Double.parseDouble(scanner.nextLine());
+                                
+                                System.out.println("\nCoût avant optimisation : " + reseau.calculerCoutTotal(lambda));
+                                AlgoOptimal.resoudreOptimise(reseau, lambda, iterations, alpha);
+                            } catch (NumberFormatException e) {
+                                System.out.println("Erreur : Veuillez entrer des nombres valides.");
+                            }
                             break;
                         case "2":
                             System.out.print("Nom du fichier de sauvegarde : ");
@@ -79,8 +83,8 @@ public class Main {
                         }
                         break;
                     case "2":
-                        System.out.print("Nom et type de la maison (ex: M1 NORMAL) : ");
-                        System.out.print("\nTypes de maisons existantes : BASSE (10 kW), NORMAL (20 kW), FORTE (40 kW)\n");
+                        System.out.print("Nom et type de la maison (ex: M1 NORMALE) : ");
+                        System.out.print("\nTypes de maisons existantes : BASSE (10 kW), NORMALE (20 kW), FORTE (40 kW)\n");
                         String[] parts2 = scanner.nextLine().split(" ");
                         if (parts2.length == 2) {
                             reseau.ajouterMaison(parts2[0], parts2[1]);
