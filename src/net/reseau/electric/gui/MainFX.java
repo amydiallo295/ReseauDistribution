@@ -1,4 +1,4 @@
-package net.reseau.electrique.gui;
+package net.reseau.electric.gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -12,10 +12,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import net.reseau.electrique.Reseau;
-import net.reseau.electrique.algoOptimal.AlgoOptimal;
-import net.reseau.electrique.io.ReseauExporter;
-import net.reseau.electrique.io.ReseauImporter;
+import net.reseau.electric.Reseau;
+import net.reseau.electric.algoOptimal.AlgoOptimal;
+import net.reseau.electric.io.ReseauExporter;
+import net.reseau.electric.io.ReseauImporter;
 
 import java.io.File;
 import java.io.OutputStream;

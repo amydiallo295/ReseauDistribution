@@ -1,4 +1,4 @@
-package net.reseau.electrique;
+package net.reseau.electric;
 
 import java.util.HashMap;
 import java.util.Map;
