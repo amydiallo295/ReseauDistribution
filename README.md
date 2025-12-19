@@ -55,13 +55,36 @@ src/
 bin/                                (Fichiers .class compilés)
 ```
 
-## Algorithme d'optimisation
+## Algorithmes d'optimisation
 
 ### Implémentation
-Oui, nous avons implémenté un algorithme de résolution automatique plus efficace : **Algorithme de recherche locale avec amélioration itérative**.
+Oui, nous avons implémenté **trois algorithmes de résolution automatique** plus efficaces que l'algorithme naïf proposé :
 
-### Fonctionnement
-L'algorithme (`AlgoOptimal.resoudreOptimise()`) fonctionne comme suit :
+#### 1. Algorithme GRASP (Greedy Randomized Adaptive Search Procedure)
+- **Approche hybride** : Combine construction greedy randomisée et recherche locale
+- **Phase 1 - Construction** : Pour chaque maison, crée une liste restreinte de candidats (RCL) avec les meilleurs générateurs, puis choisit aléatoirement
+- **Phase 2 - Recherche locale** : Explore le voisinage pour améliorer la solution
+- **Avantages** : Évite les minima locaux grâce à la randomisation, converge rapidement
+- **Paramètres** : `alpha` (0-1) contrôle le degré de randomisation
+
+#### 2. Génération de solution initiale Greedy
+- **Approche constructive** : Construit une solution de qualité depuis zéro
+- **Stratégie** : Trie les maisons par demande décroissante, assigne chaque maison au générateur qui minimise le coût global
+- **Avantages** : Déterministe, rapide, produit directement une bonne solution initiale
+- **Utilisation** : Peut servir de point de départ pour d'autres algorithmes
+
+#### 3. Algorithme d'amélioration locale
+- **Approche** : Recherche locale avec focus sur les surcharges
+- **Stratégie** : 
+  1. Identifie les générateurs surchargés
+  2. Pour chaque maison sur générateur surchargé, teste tous les autres générateurs
+  3. Garde le meilleur déplacement qui réduit le coût
+  4. Itère jusqu'à convergence
+- **Avantages** : Résout prioritairement les problèmes de surcharge
+
+### Fonctionnement détaillé de l'algorithme principal
+
+L'algorithme d'amélioration locale (`AlgoOptimal.resoudreOptimise()`) fonctionne comme suit :
 
 1. **Identification des surcharges** : Détecte tous les générateurs dont la charge dépasse la capacité
 2. **Recherche du meilleur déplacement** : Pour chaque maison connectée à un générateur surchargé :
@@ -105,10 +128,11 @@ Le coût est calculé selon : **Coût = Dispersion + λ × Surcharge**
    - Import du réseau depuis un fichier texte
    - Validation de la syntaxe lors de l'import
 
-5. **Algorithme d'optimisation**
-   - Recherche locale itérative
-   - Résolution des surcharges prioritaire
-   - Convergence vers un minimum local
+5. **Algorithmes d'optimisation**
+   - **GRASP** : Algorithme métaheuristique avec construction randomisée et recherche locale
+   - **Génération de solution initiale greedy** : Construction intelligente d'une bonne solution de départ
+   - **Recherche locale itérative** : Amélioration progressive avec focus sur les surcharges
+   - Tous les algorithmes utilisent la même fonction de coût (Dispersion + λ × Surcharge)
 
 6. **Interface utilisateur**
    - Menu principal pour créer le réseau
