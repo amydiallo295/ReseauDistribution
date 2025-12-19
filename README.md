@@ -45,7 +45,7 @@ java -cp bin net.reseau.electric.Main src/net/reseau/electric/io/instance1.txt
 2. Compilation avec JavaFX :
 ```bash
 # macOS/Linux
-# Remplacer /chemin/vers/javafx-sdk-25.0.1/lib par le chemin réel de celui qui se trouve dans ReseauDistribution ou celui utilisé auparavant
+# Remplacer /chemin/vers/javafx-sdk-25.0.1/lib par le chemin réel
 javac --module-path "/chemin/vers/javafx-sdk-25.0.1/lib" --add-modules javafx.controls,javafx.fxml -d bin src/net/reseau/electric/*.java src/net/reseau/electric/**/*.java
 
 Exemple : 
@@ -75,17 +75,28 @@ src/
 └── net/
     └── reseau/
         └── electric/
-            ├── Main.java           (Point d'entrée du programme)
+            ├── Main.java           (Point d'entrée du programme console)
             ├── Reseau.java         (Gestion du réseau électrique)
             ├── Generateur.java     (Classe générateur)
             ├── Maison.java         (Classe maison)
-            └── TypeMaison.java     (Énumération des types de maison)
+            ├── TypeMaison.java     (Énumération des types de maison)
             ├── algoOptimal/
             │   └── AlgoOptimal.java    (Algorithme d'optimisation)
+            ├── gui/
+            │   └── MainFX.java     (Interface graphique JavaFX)
             └── io/
                 ├── ReseauExporter.java (Export vers fichier)
                 └── ReseauImporter.java (Import depuis fichier)
 bin/                                (Fichiers .class compilés)
+lib/                                (Bibliothèques externes)
+    └── junit-platform-console-standalone-1.9.3.jar
+test/                               (Tests unitaires)
+└── net/
+    └── reseau/
+        └── electric/
+            ├── GenerateurTest.java
+            ├── MaisonTest.java
+            └── ReseauTest.java
 ```
 
 ## Algorithme d'optimisation
