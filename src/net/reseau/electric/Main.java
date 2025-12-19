@@ -23,9 +23,9 @@ public class Main {
                         case "1":
                             System.out.println("\n=== Résolution automatique (Algorithme GRASP) ===");
                             try {
-                                System.out.print("Valeur de lambda (recommandé: 10000) : ");
+                                System.out.print("Valeur de lambda : ");
                                 int lambda = Integer.parseInt(scanner.nextLine());
-                                System.out.print("Nombre d'itérations GRASP (recommandé: 20) : ");
+                                System.out.print("Nombre d'itérations GRASP : ");
                                 int iterations = Integer.parseInt(scanner.nextLine());
                                 System.out.print("Paramètre alpha 0-1 (recommandé: 0.3) : ");
                                 double alpha = Double.parseDouble(scanner.nextLine());
