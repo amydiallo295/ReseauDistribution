@@ -60,6 +60,9 @@ javac --module-path "C:\chemin\vers\javafx-sdk-25.0.1\lib" --add-modules javafx.
 # macOS/Linux
 java --module-path "/chemin/vers/javafx-sdk-25.0.1/lib" --add-modules javafx.controls,javafx.fxml -cp bin net.reseau.electric.gui.MainFX
 
+Exemple : 
+java --module-path "/Users/yennhi/Downloads/javafx-sdk-25.0.1/lib" --add-modules javafx.controls,javafx.fxml -cp bin net.reseau.electrique.gui.MainFX                 
+
 # Windows
 java --module-path "C:\chemin\vers\javafx-sdk-25.0.1\lib" --add-modules javafx.controls,javafx.fxml -cp bin net.reseau.electric.gui.MainFX
 ```
