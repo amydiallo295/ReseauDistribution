@@ -123,8 +123,8 @@ javac -d bin -sourcepath src src/net/reseau/electric/*.java src/net/reseau/elect
 
 #### Avec fichier d'instance (recommandé pour l'évaluation)
 ```bash
-# Syntaxe : java -cp bin net.reseau.electric.Main <fichier> [lambda]
-java -cp bin net.reseau.electric.Main src/net/reseau/electric/io/instance1.txt 10000
+# Syntaxe : java -cp bin net.reseau.electric.Main <fichier> 
+java -cp bin net.reseau.electric.Main src/net/reseau/electric/io/instance1.txt 
 ```
 
 #### Sans argument (mode manuel)
