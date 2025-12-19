@@ -55,11 +55,6 @@ javac --module-path "/chemin/vers/javafx-sdk-25.0.1/lib" --add-modules javafx.co
 javac --module-path "C:\chemin\vers\javafx-sdk-25.0.1\lib" --add-modules javafx.controls,javafx.fxml -d bin src/net/reseau/electric/*.java src/net/reseau/electric/**/*.java
 ```
 
-**Note macOS** : Si vous obtenez "no matches found" ou "Operation not permitted", il faut :
-- Utiliser des guillemets autour du chemin JavaFX (comme dans l'exemple)
-- Ne PAS copier-coller avec des backslashes `\` devant les options
-- Accorder l'accès au Terminal dans Préférences Système > Confidentialité > Accès complet au disque
-
 3. Exécution de l'interface graphique :
 ```bash
 # macOS/Linux
