@@ -2,7 +2,7 @@ package net.reseau.electric;
 
 public enum TypeMaison {
     BASSE(10),
-    NORMALE(20),
+    NORMAL(20),
     FORTE(40);
 
     public final int demande;

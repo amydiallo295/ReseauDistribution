@@ -17,13 +17,17 @@ public class Reseau {
 
     public void ajouterMaison(String nom, String typeStr) {
         try {
+            // Convertir NORMAL en NORMALE pour compatibilité
+            if (typeStr.equalsIgnoreCase("NORMAL")) {
+                typeStr = "NORMALE";
+            }
             TypeMaison type = TypeMaison.valueOf(typeStr.toUpperCase());
             if (maisons.containsKey(nom)) {
                 System.out.println("MAJ: Consommation de la maison " + nom + " mise à jour.");
             }
             maisons.put(nom, new Maison(nom, type));
         } catch (IllegalArgumentException e) {
-            System.out.println("Type inconnu. Utilisez BASSE, NORMALE ou FORTE.");
+            System.out.println("Type inconnu. Utilisez BASSE, NORMAL ou FORTE.");
         }
     }
 

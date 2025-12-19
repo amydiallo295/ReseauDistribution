@@ -29,9 +29,18 @@ public class Main {
                     String choix = scanner.nextLine();
                     switch (choix) {
                         case "1":
-                            System.out.print("Nombre de tentatives d'échanges (k) : ");
-                            int k = Integer.parseInt(scanner.nextLine());
-                            AlgoOptimal.resoudreOptimise(reseau, lambda, k);
+                            System.out.println("\n=== Résolution automatique (Algorithme GRASP) ===");
+                            try {
+                                System.out.print("Nombre d'itérations GRASP (recommandé: 20) : ");
+                                int iterations = Integer.parseInt(scanner.nextLine());
+                                System.out.print("Paramètre alpha 0-1 (recommandé: 0.3) : ");
+                                double alpha = Double.parseDouble(scanner.nextLine());
+                                
+                                System.out.println("\nCoût avant optimisation : " + reseau.calculerCoutTotal(lambda));
+                                AlgoOptimal.resoudreOptimise(reseau, lambda, iterations, alpha);
+                            } catch (NumberFormatException e) {
+                                System.out.println("Erreur : Veuillez entrer des nombres valides.");
+                            }
                             break;
                         case "2":
                             System.out.print("Nom du fichier de sauvegarde : ");
