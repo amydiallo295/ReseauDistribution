@@ -1,10 +1,30 @@
 package net.reseau.electric.io;
-import net.reseau.electric.Reseau;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
+import net.reseau.electric.Reseau;
 
+/**
+ * Classe utilitaire pour importer un réseau électrique depuis un fichier texte.
+ * @author Aminata Diallo, Elodie Cao
+ * @version 1.0
+ */
 public class ReseauImporter {
+    
+    /**
+     * Importe un réseau électrique depuis un fichier texte au format Prolog.
+     * Le fichier doit respecter l'ordre : générateurs, puis maisons, puis connexions.
+     * Chaque ligne doit se terminer par un point.
+     * 
+     * Format attendu :
+     * - generateur(nom, capacité).
+     * - maison(nom, type).
+     * - connexion(maison, générateur).
+     * 
+     * @param chemin le chemin du fichier source
+     * @return un nouveau réseau construit à partir du fichier
+     * @throws IOException si une erreur de lecture ou de format se produit
+     */
     public static Reseau importer(String chemin) throws IOException {
         Reseau reseau = new Reseau();
         List<String> lignes = Files.readAllLines(new File(chemin).toPath());

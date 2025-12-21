@@ -1,13 +1,46 @@
 
 package net.reseau.electric;
 
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import net.reseau.electric.algoOptimal.AlgoOptimal;
 import net.reseau.electric.io.ReseauExporter;
 import net.reseau.electric.io.ReseauImporter;
 
+/**
+ * Classe principale de l'application console pour la gestion du réseau électrique.
+ * Offre deux modes d'utilisation :
+ * 1. Mode interactif : création manuelle du réseau via des menus
+ * 2. Mode import : chargement d'un réseau depuis un fichier
+ * 
+ * @author Aminata Diallo, Elodie Cao
+ * @version 1.0
+ */
 public class Main {
+    
+    /**
+     * Point d'entrée principal de l'application.
+     * 
+     * Si un argument est fourni, le programme démarre en mode import :
+     * - Charge le réseau depuis le fichier spécifié
+     * - Propose un menu pour optimiser et sauvegarder
+     * 
+     * Sans argument, le programme démarre en mode interactif :
+     * - Menu principal pour créer le réseau (générateurs, maisons, connexions)
+     * - Menu secondaire pour gérer et optimiser le réseau
+     * 
+     * @param args arguments de ligne de commande (optionnel : chemin vers fichier réseau)
+     */
     public static void main(String[] args) {
+        // Forcer l'encodage UTF-8 pour l'affichage correct des caractères
+        try {
+            System.setOut(new PrintStream(System.out, true, "UTF-8"));
+            System.setErr(new PrintStream(System.err, true, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            System.err.println("Erreur encodage UTF-8");
+        }
+        
         if (args.length > 0) {
             String chemin = args[0];
             try {

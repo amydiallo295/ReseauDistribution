@@ -3,11 +3,33 @@ package net.reseau.electric;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Classe principale représentant un réseau de distribution électrique.
+ * Gère les générateurs, les maisons et les connexions entre eux.
+ * Permet de valider, calculer le coût et optimiser la distribution électrique.
+ * 
+ * @author Aminata Diallo, Elodie Cao
+ * @version 1.0
+ */
 public class Reseau {
+    /** Map associant le nom d'un générateur à son objet Generateur */
     private Map<String, Generateur> generateurs = new HashMap<>();
+    
+    /** Map associant le nom d'une maison à son objet Maison */
     private Map<String, Maison> maisons = new HashMap<>();
+    
+    /** Map associant le nom d'une maison au nom du générateur auquel elle est connectée */
     private Map<String, String> connexions = new HashMap<>(); // maison -> générateur
+    
+    /** Mode silencieux : désactive les messages System.out lors de l'optimisation */
+    private boolean modeSilencieux = false;
 
+    /**
+     * Ajoute un générateur au réseau ou met à jour sa capacité s'il existe déjà.
+     * 
+     * @param nom le nom unique du générateur
+     * @param capacite la capacité maximale en kW
+     */
     public void ajouterGenerateur(String nom, int capacite) {
         if (generateurs.containsKey(nom)) {
             System.out.println("MAJ: Capacité du générateur " + nom + " mise à jour.");
@@ -15,6 +37,12 @@ public class Reseau {
         generateurs.put(nom, new Generateur(nom, capacite));
     }
 
+    /**
+     * Ajoute une maison au réseau ou met à jour son type si elle existe déjà.
+     * 
+     * @param nom le nom unique de la maison
+     * @param typeStr le type de maison sous forme de chaîne ("BASSE", "NORMAL" ou "FORTE")
+     */
     public void ajouterMaison(String nom, String typeStr) {
         try {
             TypeMaison type = TypeMaison.valueOf(typeStr.toUpperCase());
@@ -27,28 +55,39 @@ public class Reseau {
         }
     }
 
+    /**
+     * Ajoute une connexion entre une maison et un générateur.
+     * Vérifie l'existence de la maison et du générateur.
+     * Détecte et avertit en cas de surcharge du générateur.
+     * Si la maison était déjà connectée, la connexion précédente est remplacée.
+     * 
+     * @param nomMaison le nom de la maison à connecter
+     * @param nomGenerateur le nom du générateur cible
+     */
     public void ajouterConnexion(String nomMaison, String nomGenerateur){
         /* Méthode permettant d'ajouter des connexions dans la liste des connexions */
         
         // Vérification de l'existence de la maison
         if (!maisons.containsKey(nomMaison)) { 
-            System.out.println("Erreur : La maison " + nomMaison + " n'existe pas dans le réseau.");
+            if (!modeSilencieux) System.out.println("Erreur : La maison " + nomMaison + " n'existe pas dans le réseau.");
             return;
         }
         Maison maison = maisons.get(nomMaison);
 
         // Vérification de l'existence du générateur
         if (!generateurs.containsKey(nomGenerateur)) { 
-            System.out.println("Erreur : Le générateur " + nomGenerateur + " n'existe pas dans le réseau.");
+            if (!modeSilencieux) System.out.println("Erreur : Le générateur " + nomGenerateur + " n'existe pas dans le réseau.");
             return;
         }
         Generateur generateur = generateurs.get(nomGenerateur);
 
-        // Vérifier si la maison est déjà connectée (unicité de la connexion)
+        // Verifier si la maison est deja connectee (unicite de la connexion)
         if (connexions.containsKey(nomMaison)) {
             String ancienGenerateur = connexions.get(nomMaison);
-            System.out.println("Info : La maison " + nomMaison + " était connectée à " + ancienGenerateur + 
-                             ". Nouvelle connexion vers " + nomGenerateur + ".");
+            if (!modeSilencieux) {
+                System.out.println("Info : La maison " + nomMaison + " etait connectee a " + ancienGenerateur + 
+                                 ". Nouvelle connexion vers " + nomGenerateur + ".");
+            }
         }
 
         // Calcul de la charge actuelle du générateur
@@ -63,17 +102,26 @@ public class Reseau {
         // Vérifier si la connexion provoque une surcharge
         int nouvelleCharge = chargeActuelle + maison.getDemande();
         if (nouvelleCharge > generateur.getCapacite()) {
-            System.out.println("⚠️ AVERTISSEMENT : connecter " + nomMaison + " a " + nomGenerateur +
-                             " provoque une surcharge (" + nouvelleCharge + "/" + 
-                             generateur.getCapacite() + " kW).");
-            System.out.println("   → Vous devez modifier le réseau pour éliminer la surcharge avant de calculer le coût.");
+            if (!modeSilencieux) {
+                System.out.println("[!] AVERTISSEMENT : connecter " + nomMaison + " a " + nomGenerateur +
+                                 " provoque une surcharge (" + nouvelleCharge + "/" + 
+                                 generateur.getCapacite() + " kW).");
+                System.out.println("    Vous devez modifier le reseau pour eliminer la surcharge avant de calculer le cout.");
+            }
         }
         
         // Ajout de la connexion (même en cas de surcharge)
         connexions.put(nomMaison, nomGenerateur);
-        System.out.println("Connexion ajoutee : " + nomMaison + " -> " + nomGenerateur);
+        if (!modeSilencieux) System.out.println("Connexion ajoutee : " + nomMaison + " -> " + nomGenerateur);
     }
 
+    /**
+     * Supprime une connexion existante entre une maison et un générateur.
+     * Vérifie que la maison, le générateur et la connexion existent.
+     * 
+     * @param nomMaison le nom de la maison
+     * @param nomGenerateur le nom du générateur
+     */
     public void supprimerConnexion(String nomMaison, String nomGenerateur) {
         // Méthode permettant de supprimer une connexion entre une maison et un générateur
     // Vérifier que la maison existe
@@ -96,19 +144,55 @@ public class Reseau {
 
     // Supprimer la connexion
     connexions.remove(nomMaison);
-    System.out.println("Connexion supprimée : " + nomMaison + " -/-> " + nomGenerateur);
+    System.out.println("Connexion supprimee : " + nomMaison + " -/-> " + nomGenerateur);
 }
 
-
+    /**
+     * Supprime la connexion d'une maison sans vérifier le générateur cible.
+     * Utilisé lors des modifications de connexions.
+     * 
+     * @param nomMaison le nom de la maison dont la connexion doit être supprimée
+     */
     public void enleverConnexionMaison(String nomMaison) {
         connexions.remove(nomMaison);
     }
+    
+    /**
+     * Active ou désactive le mode silencieux (sans messages console).
+     * Utile pour l'optimisation dans l'interface graphique.
+     * 
+     * @param silencieux true pour activer, false pour désactiver
+     */
+    public void setModeSilencieux(boolean silencieux) {
+        this.modeSilencieux = silencieux;
+    }
+    
+    /**
+     * Vérifie si le mode silencieux est activé.
+     * 
+     * @return true si le mode silencieux est actif
+     */
+    public boolean isModeSilencieux() {
+        return modeSilencieux;
+    }
 
+    /**
+     * Vérifie si une maison a une connexion active.
+     * 
+     * @param nomMaison le nom de la maison à vérifier
+     * @return true si la maison est connectée, false sinon
+     */
     public boolean connexionExiste(String nomMaison) {
         return connexions.containsKey(nomMaison);
     }
 
 
+    /**
+     * Affiche dans la console l'état complet du réseau :
+     * - tous les générateurs avec leur capacité
+     * - toutes les maisons avec leur type et demande
+     * - toutes les connexions existantes
+     */
     public void afficher() {
         System.out.println("\n--- Réseau actuel ---");
         System.out.println("Générateurs :");
@@ -126,6 +210,12 @@ public class Reseau {
         System.out.println("---------------------\n");
     }
 
+    /**
+     * Vérifie que toutes les maisons ont une connexion.
+     * Affiche les maisons sans connexion le cas échéant.
+     * 
+     * @return true si toutes les maisons sont connectées, false sinon
+     */
     public boolean verifierConnexion() {
         boolean ok = true;
         for (String m : maisons.keySet()) {
@@ -204,6 +294,13 @@ public class Reseau {
         return valide;
     }
 
+    /**
+     * Calcule et affiche le coût total du réseau électrique.
+     * Le coût est calculé selon la formule : Dispersion + λ × Surcharge
+     * où λ (lambda) = 10.
+     * 
+     * Vérifie d'abord que le réseau respecte toutes les restrictions avant le calcul.
+     */
     public void calculerCout() {
         // Vérifier d'abord que le réseau respecte toutes les restrictions
         if (!validerReseau()) {
@@ -274,6 +371,12 @@ public class Reseau {
         return false;
     }
 
+    /**
+     * Affiche dans la console l'état détaillé des connexions :
+     * - maisons connectées avec leur générateur
+     * - maisons non connectées
+     * - générateurs disponibles
+     */
     public void afficherEtatConnexions() {
         System.out.println("\n--- État des connexions ---");
         
@@ -296,6 +399,10 @@ public class Reseau {
         System.out.println("---------------------------");
     }
 
+    /**
+     * Affiche dans la console toutes les connexions existantes.
+     * Si aucune connexion n'existe, affiche un message approprié.
+     */
     public void afficherConnexionsExistantes() {
         System.out.println("\n--- Connexions existantes ---");
         if (connexions.isEmpty()) {
@@ -308,7 +415,12 @@ public class Reseau {
         System.out.println("-----------------------------");
     }
 
-    // Méthodes qui retournent des String pour l'affichage dans l'interface
+    /**
+     * Retourne une représentation textuelle complète du réseau.
+     * Inclut tous les générateurs, maisons et connexions.
+     * 
+     * @return une chaîne formatée décrivant le réseau
+     */
     public String getReseauAsString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n--- Reseau actuel ---\n");
@@ -328,6 +440,11 @@ public class Reseau {
         return sb.toString();
     }
 
+    /**
+     * Retourne une représentation textuelle de toutes les connexions existantes.
+     * 
+     * @return une chaîne formatée décrivant les connexions
+     */
     public String getConnexionsAsString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n--- Connexions existantes ---\n");
@@ -342,6 +459,12 @@ public class Reseau {
         return sb.toString();
     }
 
+    /**
+     * Retourne une représentation textuelle de l'état des connexions.
+     * Inclut les maisons connectées, non connectées et les générateurs disponibles.
+     * 
+     * @return une chaîne formatée décrivant l'état des connexions
+     */
     public String getEtatConnexionsAsString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n--- Etat des connexions ---\n");
@@ -366,15 +489,29 @@ public class Reseau {
         return sb.toString();
     }
 
-    // Getters pour l'algorithme d'optimisation
+    /**
+     * Retourne la map de tous les générateurs du réseau.
+     * 
+     * @return map des générateurs (nom → Generateur)
+     */
     public Map<String, Generateur> getGenerateurs() {
         return generateurs;
     }
 
+    /**
+     * Retourne la map de toutes les maisons du réseau.
+     * 
+     * @return map des maisons (nom → Maison)
+     */
     public Map<String, Maison> getMaisons() {
         return maisons;
     }
 
+    /**
+     * Retourne la map de toutes les connexions du réseau.
+     * 
+     * @return map des connexions (nomMaison → nomGenerateur)
+     */
     public Map<String, String> getConnexions() {
         return connexions;
     }

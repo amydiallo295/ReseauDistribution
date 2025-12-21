@@ -3,40 +3,53 @@ package net.reseau.electric.algoOptimal;
 import java.util.*;
 import net.reseau.electric.Reseau;
 
+/**
+ * Classe implémentant des algorithmes d'optimisation pour les réseaux électriques.
+ * Utilise l'algorithme GRASP (Greedy Randomized Adaptive Search Procedure)
+ * qui combine construction greedy randomisée et recherche locale.
+ * 
+ * @author Aminata Diallo, Elodie Cao
+ * @version 1.0
+ */
 public class AlgoOptimal {
 
     /**
-     * Algorithme GRASP (Greedy Randomized Adaptive Search Procedure)
-     * Combine construction greedy randomisée avec recherche locale itérative
+     * Algorithme GRASP (Greedy Randomized Adaptive Search Procedure).
+     * Combine construction greedy randomisée avec recherche locale itérative.
+     * 
+     * L'algorithme fonctionne en deux phases :
+     * 1. Construction greedy randomisée : construit une solution en choisissant
+     *    semi-aléatoirement parmi les meilleurs choix
+     * 2. Recherche locale : améliore la solution en testant des modifications
+     * 
      * @param reseau le réseau à optimiser (modifié sur place)
-     * @param lambda coefficient de pénalisation
+     * @param lambda coefficient de pénalisation de la surcharge
      * @param maxIterations nombre d'itérations GRASP
      * @param alpha paramètre de randomisation (0 = greedy pur, 1 = aléatoire)
      */
     public static void resoudreOptimise(Reseau reseau, int lambda, int maxIterations, double alpha) {
         System.out.println("\n=== Algorithme GRASP (Greedy Randomized Adaptive Search) ===");
-        System.out.printf("Paramètres: iterations=%d, alpha=%.2f, lambda=%d\n", maxIterations, alpha, lambda);
+        System.out.printf("Parametres: iterations=%d, alpha=%.2f, lambda=%d\n", maxIterations, alpha, lambda);
         
         Random random = new Random();
         Map<String, String> meilleuresSolutions = new HashMap<>();
         double meilleurCout = Double.MAX_VALUE;
         
         for (int iter = 0; iter < maxIterations; iter++) {
-            // Phase 1: Construction greedy randomisée
+            // Phase 1: Construction greedy randomisee
             construireSolutionGreedyRandomisee(reseau, lambda, alpha, random);
             
-            // Phase 2: Recherche locale (amélioration)
+            // Phase 2: Recherche locale (amelioration)
             rechercheLocale(reseau, lambda, 50);
             
-            // Évaluer la solution
+            // Evaluer la solution
             double coutActuel = reseau.calculerCoutTotal(lambda);
             
-            // Garder la meilleure solution trouvée
+            // Garder la meilleure solution trouvee
             if (coutActuel < meilleurCout) {
                 meilleurCout = coutActuel;
                 meilleuresSolutions = new HashMap<>(reseau.getConnexions());
-                System.out.printf("Itération %d : Nouvelle meilleure solution (coût: %.6f)\n", 
-                    iter + 1, meilleurCout);
+                System.out.printf("[Iter %d] Meilleur cout: %.6f\n", iter + 1, meilleurCout);
             }
         }
         
@@ -45,11 +58,18 @@ public class AlgoOptimal {
             reseau.ajouterConnexion(entry.getKey(), entry.getValue());
         }
         
-        System.out.printf("\nCoût final optimisé : %.6f\n", meilleurCout);
+        System.out.printf("\n>>> Cout final: %.6f\n", meilleurCout);
     }
     
     /**
-     * Construit une solution en utilisant un greedy randomisé
+     * Construit une solution en utilisant un algorithme greedy randomisé.
+     * Pour chaque maison, calcule le coût d'ajout à chaque générateur,
+     * puis choisit aléatoirement parmi les meilleurs candidats (RCL).
+     * 
+     * @param reseau le réseau à modifier
+     * @param lambda coefficient de pénalisation
+     * @param alpha paramètre de randomisation pour la RCL
+     * @param random générateur de nombres aléatoires
      */
     private static void construireSolutionGreedyRandomisee(Reseau reseau, int lambda, double alpha, Random random) {
         // Supprimer toutes les connexions existantes
@@ -97,7 +117,14 @@ public class AlgoOptimal {
     }
     
     /**
-     * Recherche locale : explore le voisinage pour améliorer la solution
+     * Recherche locale : explore le voisinage pour améliorer la solution.
+     * Pour chaque maison, teste tous les générateurs possibles et garde
+     * le changement qui améliore le coût.
+     * S'arrête quand aucune amélioration n'est trouvée.
+     * 
+     * @param reseau le réseau à optimiser
+     * @param lambda coefficient de pénalisation
+     * @param maxIterLocale nombre maximum d'itérations de recherche locale
      */
     private static void rechercheLocale(Reseau reseau, int lambda, int maxIterLocale) {
         boolean amelioration = true;

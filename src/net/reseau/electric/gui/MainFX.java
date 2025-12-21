@@ -21,17 +21,45 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+/**
+ * Classe principale de l'interface graphique JavaFX pour la gestion du réseau électrique.
+ * Fournit une interface utilisateur complète avec trois onglets principaux :
+ * 1. Création manuelle du réseau (générateurs, maisons, connexions)
+ * 2. Import/Export et optimisation automatique
+ * 3. Visualisation de l'état du réseau
+ * 
+ * @author Aminata Diallo, Elodie Cao
+ * @version 1.0
+ */
 public class MainFX extends Application {
 
+    /** Instance du réseau électrique géré par l'interface */
     private Reseau reseau = new Reseau();
+    
+    /** Fenêtre principale de l'application */
     private Stage stage;
+    
+    /** Zone de texte pour le journal d'activité */
     private TextArea logArea = new TextArea();
+    
+    /** Label affichant le statut actuel de l'application */
     private Label statusLabel = new Label("Prêt");
 
+    /**
+     * Point d'entrée de l'application JavaFX.
+     * 
+     * @param args arguments de ligne de commande
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Initialise et affiche l'interface graphique principale.
+     * Configure la redirection de sortie console et crée tous les composants visuels.
+     * 
+     * @param primaryStage la fenêtre principale fournie par JavaFX
+     */
     @Override
     public void start(Stage primaryStage) {
         this.stage = primaryStage;
@@ -51,7 +79,9 @@ public class MainFX extends Application {
     }
     
     /**
-     * Redirige la sortie console (System.out) vers le journal d'activité
+     * Redirige la sortie console (System.out) vers le journal d'activité de l'interface.
+     * Permet d'afficher dans l'interface tous les messages qui seraient normalement
+     * affichés dans la console.
      */
     private void redirectSystemOut() {
         PrintStream originalOut = System.out;
@@ -60,31 +90,50 @@ public class MainFX extends Application {
             private StringBuilder buffer = new StringBuilder();
             
             @Override
-            public void write(int b) {
+            public synchronized void write(int b) {
                 char c = (char) b;
                 buffer.append(c);
                 
                 if (c == '\n') {
-                    final String text = buffer.toString();
-                    buffer.setLength(0);
-                    
-                    // Écrire dans la console originale
-                    originalOut.print(text);
-                    
-                    // Écrire dans le journal d'activité (sur le thread JavaFX)
-                    Platform.runLater(() -> {
-                        String cleanText = text.replace("\n", "").trim();
-                        if (!cleanText.isEmpty()) {
-                            logArea.appendText(cleanText + "\n");
-                        }
-                    });
+                    flushBuffer();
                 }
+            }
+            
+            @Override
+            public synchronized void flush() {
+                flushBuffer();
+            }
+            
+            private synchronized void flushBuffer() {
+                if (buffer.length() == 0) return;
+                
+                final String text = buffer.toString();
+                buffer.setLength(0);
+                
+                // Écrire dans la console originale
+                originalOut.print(text);
+                
+                // Écrire dans le journal d'activité (sur le thread JavaFX)
+                Platform.runLater(() -> {
+                    String cleanText = text.replace("\n", "").trim();
+                    if (!cleanText.isEmpty()) {
+                        logArea.appendText(cleanText + "\n");
+                        logArea.setScrollTop(Double.MAX_VALUE);
+                    }
+                });
             }
         };
         
         System.setOut(new PrintStream(out, true));
     }
 
+    /**
+     * Crée l'interface principale avec tous les composants.
+     * Structure : en-tête, onglets centraux (création, optimisation, visualisation),
+     * et zone inférieure (logs et barre de statut).
+     * 
+     * @return le layout principal de l'interface
+     */
     private BorderPane createMainInterface() {
         BorderPane root = new BorderPane();
         
@@ -101,15 +150,31 @@ public class MainFX extends Application {
         Tab viewTab = new Tab("👁️ Visualisation", createViewPanel());
         
         tabPane.getTabs().addAll(manualTab, autoTab, viewTab);
-        root.setCenter(tabPane);
+      
         
         // Bas avec logs et status
         VBox bottom = createBottomPanel();
-        root.setBottom(bottom);
+          // ===== CONTENU SCROLLABLE =====
+    VBox scrollContent = new VBox(10);
+    scrollContent.getChildren().addAll(tabPane, bottom);
+    scrollContent.setPadding(new Insets(0, 10, 10, 10));
+
+    ScrollPane scrollPane = new ScrollPane(scrollContent);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setPannable(true);
+
+        root.setCenter(scrollPane);
         
         return root;
     }
 
+    /**
+     * Crée l'en-tête de l'application avec le titre et le sous-titre.
+     * 
+     * @return le panneau d'en-tête
+     */
     private VBox createHeader() {
         VBox header = new VBox(10);
         header.setPadding(new Insets(20));
@@ -127,6 +192,12 @@ public class MainFX extends Application {
         return header;
     }
 
+    /**
+     * Crée le panneau de création manuelle du réseau.
+     * Contient des sections pour ajouter générateurs, maisons et connexions.
+     * 
+     * @return le panneau de création manuelle
+     */
     private VBox createManualPanel() {
         VBox panel = new VBox(15);
         panel.setPadding(new Insets(20));
@@ -325,6 +396,13 @@ public class MainFX extends Application {
         return panel;
     }
 
+    /**
+     * Crée le panneau d'import/export et d'optimisation automatique.
+     * Permet de charger un réseau depuis un fichier, l'optimiser avec GRASP,
+     * et sauvegarder le résultat.
+     * 
+     * @return le panneau d'optimisation automatique
+     */
     private VBox createAutoPanel() {
         VBox panel = new VBox(20);
         panel.setPadding(new Insets(20));
@@ -388,6 +466,12 @@ public class MainFX extends Application {
         tfK.setPromptText("Recommandé: 100");
         tfK.setPrefWidth(150);
         
+        Label lblAlpha = new Label("α (Alpha - randomisation):");
+        lblAlpha.setStyle("-fx-font-weight: bold;");
+        TextField tfAlpha = new TextField("0.3");
+        tfAlpha.setPromptText("Valeur entre 0 et 1");
+        tfAlpha.setPrefWidth(150);
+        
         Button btnOptimize = new Button("🚀 Lancer l'Optimisation");
         btnOptimize.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;");
         btnOptimize.setPrefWidth(250);
@@ -396,12 +480,44 @@ public class MainFX extends Application {
             try {
                 int lambda = Integer.parseInt(tfLambda.getText());
                 int k = Integer.parseInt(tfK.getText());
-                double alpha = 0.3; // Paramètre de randomisation fixe
-                log("⚙️ Démarrage optimisation (λ=" + lambda + ", k=" + k + ")...");
+                double alpha = Double.parseDouble(tfAlpha.getText());
+                
+                if (alpha < 0 || alpha > 1) {
+                    logError("[-] Alpha doit etre entre 0 et 1");
+                    return;
+                }
+                
+                log("[>] Demarrage optimisation (lambda=" + lambda + ", k=" + k + ", alpha=" + alpha + ")...");
                 updateStatus("Optimisation en cours...");
-                AlgoOptimal.resoudreOptimise(reseau, lambda, k, alpha);
-                log("✓ Optimisation terminée avec succès!");
-                updateStatus("Optimisation terminée");
+                btnOptimize.setDisable(true);
+                
+                // Exécuter l'optimisation dans un thread séparé
+                new Thread(() -> {
+                    try {
+                        // Activer mode silencieux pour éviter des milliers de messages
+                        reseau.setModeSilencieux(true);
+                        
+                        AlgoOptimal.resoudreOptimise(reseau, lambda, k, alpha);
+                        double coutFinal = reseau.calculerCoutTotal(lambda);
+                        
+                        // Désactiver mode silencieux
+                        reseau.setModeSilencieux(false);
+                        
+                        Platform.runLater(() -> {
+                            log("[+] Optimisation terminee avec succes!");
+                            log(">>> Cout final optimise : " + String.format("%.6f", coutFinal));
+                            updateStatus("Optimisation terminee - Cout: " + String.format("%.2f", coutFinal));
+                            btnOptimize.setDisable(false);
+                        });
+                    } catch (Exception ex) {
+                        reseau.setModeSilencieux(false);
+                        Platform.runLater(() -> {
+                            logError("[-] Erreur durant l'optimisation: " + ex.getMessage());
+                            updateStatus("Erreur d'optimisation");
+                            btnOptimize.setDisable(false);
+                        });
+                    }
+                }).start();
             } catch (NumberFormatException ex) {
                 logError("✗ Paramètres invalides");
             }
@@ -411,7 +527,9 @@ public class MainFX extends Application {
         optGrid.add(tfLambda, 1, 0);
         optGrid.add(lblK, 0, 1);
         optGrid.add(tfK, 1, 1);
-        optGrid.add(btnOptimize, 0, 2, 2, 1);
+        optGrid.add(lblAlpha, 0, 2);
+        optGrid.add(tfAlpha, 1, 2);
+        optGrid.add(btnOptimize, 0, 3, 2, 1);
         GridPane.setHalignment(btnOptimize, javafx.geometry.HPos.CENTER);
         
         optSection.setContent(optGrid);
@@ -481,6 +599,12 @@ public class MainFX extends Application {
         return panel;
     }
 
+    /**
+     * Crée le panneau de visualisation du réseau.
+     * Affiche l'état complet du réseau, les connexions ou l'état des connexions.
+     * 
+     * @return le panneau de visualisation
+     */
     private VBox createViewPanel() {
         VBox panel = new VBox(15);
         panel.setPadding(new Insets(20));
@@ -559,6 +683,11 @@ public class MainFX extends Application {
         return panel;
     }
 
+    /**
+     * Crée le panneau inférieur avec le journal d'activité et la barre de statut.
+     * 
+     * @return le panneau inférieur
+     */
     private VBox createBottomPanel() {
         VBox bottom = new VBox(5);
         
@@ -568,7 +697,7 @@ public class MainFX extends Application {
         
         logArea.setEditable(false);
         logArea.setPrefHeight(120);
-        logArea.setWrapText(true);
+        logArea.setWrapText(false);
         logArea.setStyle("-fx-font-family: 'Consolas', monospace; -fx-font-size: 11px;");
         
         // Barre de status
@@ -598,20 +727,40 @@ public class MainFX extends Application {
         return bottom;
     }
 
+    /**
+     * Ajoute un message au journal d'activité avec un horodatage.
+     * 
+     * @param message le message à afficher
+     */
     private void log(String message) {
         String timestamp = java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
         logArea.appendText("[" + timestamp + "] " + message + "\n");
         logArea.setScrollTop(Double.MAX_VALUE);
     }
 
+    /**
+     * Ajoute un message d'erreur au journal d'activité.
+     * 
+     * @param message le message d'erreur à afficher
+     */
     private void logError(String message) {
         log("❌ " + message);
     }
 
+    /**
+     * Met à jour le texte de la barre de statut.
+     * 
+     * @param status le nouveau statut à afficher
+     */
     private void updateStatus(String status) {
         statusLabel.setText("📌 " + status);
     }
 
+    /**
+     * Retourne la feuille de style CSS pour l'interface.
+     * 
+     * @return la chaîne CSS formatée
+     */
     private String getStyleSheet() {
         return "data:text/css," +
             ".tab-pane { -fx-background-color: #fafafa; }" +
